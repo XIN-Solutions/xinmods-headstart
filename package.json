@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Some handy services to speed up development with XIN Mods",
   "main": "index.js",
+  "repository": "https://github.com/XIN-Solutions/xinmods-headstart",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
