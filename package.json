@@ -1,0 +1,27 @@
+{
+  "name": "xinmods-headstart",
+  "version": "1.0.0",
+  "description": "Some handy services to speed up development with XIN Mods",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "xinmods",
+    "bloomreach",
+    "xm",
+    "headless"
+  ],
+  "author": "Marnix Kok <marnix@xinsolutions.co.nz>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "xinmods": "^1.6.5",
+    "lodash": "^4.17.21",
+    "aws-sdk": "^2.1041.0",
+    "juice": "^8.0.0",
+    "chokidar": "^3.5.2",
+    "ws": "^8.3.0",
+    "express-hbs": "^2.4.0",
+    "compression": "^1.7.4"
+  }
+}
