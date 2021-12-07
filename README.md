@@ -7,6 +7,53 @@ To understand how to interact with the BloomreachXM backend enriched with the XI
 * https://npmjs.com/package/xinmods
 * https://xinsolutions.co.nz/bloomreach-headless-cms-caas
 
+## Model transformations
+
+You can register a model transformation, this will help you get a more useful representation in Handlebars.
+
+To do so do something like this in your code. 
+
+    const {Models} = require('xinmods-headstart');
+    Models.register("xinmods:productvariation", "tile", (varBlock) => {
+        return {
+            type: varBlock.items.variationType,
+            name: varBlock.items.variation,
+            items: _.map(_.values(varBlock.items.variationitem), (el) => el.items)
+        };
+    });
+
+Where the first parameter is the name of the document or compound type from brXM and the second
+is the variation into which the model can be created. This allows you to have several different views on
+the same data.
+
+The third parameter is the function that converts some incoming information into something else. Then 
+in your handlebars templates you can do the following. 
+
+    {{#use (model 'tile' from variation)}}
+        <pre>{{json .}}</pre>
+    {{/use}}
+
+Within the `#use` block you will now have access to a variable called `tile` that contains the values
+returned by the registered model transformation function. 
+
+## Render HTML
+
+Render some HTML by creating a simple map with `(html-field doc htmlfield)`. `doc` should have the `hippo` instance.
+
+    {{{parse-html (html-field product.doc product.doc.items.body)}}}
+
+To resolve links in the HTML block you can register a `LinkResolver` function with the `ContentParser` class.
+
+By default the following LinkResolver is registered as follows.
+
+    const NoResolver = (linkInfo) => { 
+        console.log("Did not resolve", linkInfo); return '#'
+    };
+
+    ContentParser.setLinkResolver(options.linkResolver || NoResolver);
+
+
+
 ## HotReload frontend integration
 
 To integrate the backend's websocket messaging notifications regarding updates to the backend's code 

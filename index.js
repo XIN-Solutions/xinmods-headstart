@@ -61,16 +61,20 @@ module.exports = {
 	Bloomreach: require('./services/Hippo.js'),
 
 	/**
-	 *
- 	 * @param app
+	 * Initialise the express JS application
+	 * @param express the express module
+ 	 * @param app the application instance
+	 * @param hbs the express-hbs instance
+	 * @poram options {object} the options
+	 * @param options.linkResolver {Function<object>} a function that transforms `link` objects into a url.
 	 */
-	expressJsInit(express, app, hbs, options = {assetsFolder: "/assets", linkResolver: () => { return '#'}}) {
+	expressJsInit(express, app, hbs, options = {linkResolver: () => { return '#' }}) {
 
 		const Handlebars = require('./services/Handlebars.js');
 		const HotReload = require('./services/HotReload.js');
 		const ContentParser = require('./services/ContentParser.js');
 
-		const NoResolver = (linkInfo) => { console.log("Did not resolve", linkInfo); return '#'};
+		const NoResolver = (linkInfo) => { console.log("Did not resolve", JSON.stringify(linkInfo, null, 4)); return '#'};
 		ContentParser.setLinkResolver(options.linkResolver || NoResolver);
 
 		// allow for json bodies
