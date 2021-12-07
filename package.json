@@ -23,6 +23,7 @@
     "chokidar": "^3.5.2",
     "ws": "^8.3.0",
     "express-hbs": "^2.4.0",
-    "compression": "^1.7.4"
+    "compression": "^1.7.4",
+    "parse5-html-rewriting-stream": "^6.0.1"
   }
 }

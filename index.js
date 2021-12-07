@@ -11,7 +11,6 @@
 
  */
 
-const express = require("express");
 module.exports = {
 
 	/**
@@ -45,6 +44,16 @@ module.exports = {
 	HotReload: require('./services/HotReload.js'),
 
 	/**
+	 * Helps parse richtext content and substitute links and images
+	 */
+	ContentParser: require('./services/ContentParser.js'),
+
+	/**
+	 * The decorator service.
+	 */
+	Models: require('./services/Models.js'),
+
+	/**
 	 * Exposes a function that creates an instance to the Bloomreach backend, depending
 	 * on the NODE_ENV it will use different paths.
 	 */
@@ -55,32 +64,20 @@ module.exports = {
 	 *
  	 * @param app
 	 */
-	expressJsInit(express, app, options = {assetsFolder: "/assets"}) {
+	expressJsInit(express, app, hbs, options = {assetsFolder: "/assets", linkResolver: () => { return '#'}}) {
 
 		const Handlebars = require('./services/Handlebars.js');
 		const HotReload = require('./services/HotReload.js');
+		const ContentParser = require('./services/ContentParser.js');
 
-		// compress all.
-		app.use(compression({ filter: () => { return true }}));
+		const NoResolver = (linkInfo) => { console.log("Did not resolve", linkInfo); return '#'};
+		ContentParser.setLinkResolver(options.linkResolver || NoResolver);
 
 		// allow for json bodies
 		app.use(express.json());
 
 		// initialise handlebars and attach hotreload.
-		Handlebars.initialise(app, hbs, __dirname).then(() => { HotReload.start(); });
-
-		// initialise serving assets (with cors headers and large max-age)
-		app.use(options.assetsFolder,
-			express.static(
-				'assets',
-				Object.assign({
-					setHeaders(resp, path, stat) {
-						resp.set('Access-Control-Allow-Origin', '*');
-					},
-				}, Config.inDev ? {} : {maxAge: "2592000000" /*"3600000"*/})
-			)
-		);
-
+		Handlebars.initialise(app, hbs, process.cwd()).then(() => { HotReload.start(); });
 
 	}
 

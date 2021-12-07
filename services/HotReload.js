@@ -17,7 +17,7 @@
 
 const chokidar = require("chokidar");
 const WebSocket = require('ws');
-const Config = require('./Config.js');
+const Config = require('./AppConfig.js');
 
 let wsServer = null;
 

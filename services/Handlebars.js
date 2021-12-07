@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const fs = require('fs');
+const ContentParser = require("./ContentParser.js");
 
 module.exports = {
 
@@ -75,6 +76,55 @@ module.exports = {
 			return elseCond;
 		});
 
+		hbs.registerHelper('image-url', function(image, width, height, cropX, cropY) {
+			if (!image) {
+				return null;
+			}
+
+			const cloned = image.clone();
+
+			if (width && width !== '-') {
+				cloned.scaleWidth(width);
+			} else if (height && height !== '-') {
+				cloned.scaleHeight(height);
+			}
+
+			if (cropX && cropY) {
+				cloned.crop(cropX, cropY);
+			}
+
+			return cloned.toUrl();
+		});
+
+		hbs.registerHelper('html-field', function(doc, html) {
+			return {
+				doc,
+				html
+			};
+		});
+
+		hbs.registerAsyncHelper('parse-html', async function(options, cb) {
+			const ContentParser = require('./ContentParser.js');
+			const parsedContent = (
+				await ContentParser.parseHtml(
+					options.doc.hippo,
+					options.html.items.html
+				)
+			);
+			cb(parsedContent);
+		});
+
+		hbs.registerHelper('use', function(model, options) {
+			return options.fn(model);
+		});
+
+		hbs.registerHelper("model", function(variation, _from_, source, options) {
+			const Models = require('./Models.js');
+
+			const result = {};
+			result[variation] = Models.transform(source, variation);
+			return result;
+		});
 
 		/**
 		 * Handlebars block helper to check if an env var is set to true or not
