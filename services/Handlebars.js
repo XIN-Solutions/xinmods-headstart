@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const ContentParser = require("./ContentParser.js");
+const Models = require("./Models.js");
 
 module.exports = {
 
@@ -121,15 +122,28 @@ module.exports = {
 		});
 
 		hbs.registerHelper('use', function(model, options) {
-			return options.fn(model);
-		});
-
-		hbs.registerHelper("model", function(variation, _from_, source, options) {
 			const Models = require('./Models.js');
 
-			const result = {};
-			result[variation] = Models.transform(source, variation);
-			return result;
+			const variation = options.hash.as;
+			if (!variation) {
+				throw new Error("Expected 'variation' parameter on #use helper.");
+			}
+
+			// is an array, or is map with only numeric keys.
+			const isMultiple = (
+				_.isArray(model) ||
+				_.keys(model).filter(number => number == parseInt(number)).length === _.keys(model).length
+			);
+
+			if (isMultiple) {
+				const elements = _.map(_.values(model), (el) => {
+					return Models.transform(el, variation);
+				});
+				return options.fn? options.fn(elements) : elements;
+			}
+
+			const result = Models.transform(model, variation);
+			return options.fn ? options.fn(result) : result;
 		});
 
 		/**

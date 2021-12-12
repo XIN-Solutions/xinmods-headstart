@@ -23,15 +23,35 @@ To do so do something like this in your code.
     });
 
 Where the first parameter is the name of the document or compound type from brXM and the second
-is the variation into which the model can be created. This allows you to have several different views on
+is the variation into which the model can be created. This allows you to have several views on
 the same data.
+
 
 The third parameter is the function that converts some incoming information into something else. Then 
 in your handlebars templates you can do the following. 
 
-    {{#use (model 'tile' from variation)}}
-        <pre>{{json .}}</pre>
-    {{/use}}
+        <h2>Variations</h2>
+        {{#use product.doc.items.variations as='tile'}}
+            <pre>{{json .}}</pre>
+        {{/use}}
+
+or:
+
+        <h2>Variations</h2>
+        {{#each product.doc.items.variations as |var|}}
+            {{#use var as='tile'}}
+                <pre>{{json .}}</pre>
+            {{/use}}
+        {{/each}}
+
+or as an inline function:
+
+        <pre>
+            {{{json (use product.doc.items.variations as='tile')}}}
+        </pre>
+
+
+You can feed it an array of elements that must be modelled, or a single object.
 
 Within the `#use` block you will now have access to a variable called `tile` that contains the values
 returned by the registered model transformation function. 
@@ -57,13 +77,14 @@ Some examples:
 
 ## Render HTML
 
-Render some HTML by creating a simple map with `(html-field doc htmlfield)`. `doc` should have the `hippo` instance.
+Render some HTML by using the `html-field` handlebars helper. `document` expects the source document with its `hippo`
+instance. The `field` value is the rich text object that is to be translated.  
 
     {{{html-field document=product.doc field=product.doc.items.body)}}}
 
 To resolve links in the HTML block you can register a `LinkResolver` function with the `ContentParser` class.
 
-By default the following LinkResolver is registered as follows.
+By default, the following LinkResolver is registered as follows.
 
     const NoResolver = (linkInfo) => { 
         console.log("Did not resolve", linkInfo); return '#'
@@ -72,6 +93,27 @@ By default the following LinkResolver is registered as follows.
     ContentParser.setLinkResolver(options.linkResolver || NoResolver);
 
 ## Components
+
+### Accordion
+
+Render an accordion in the page, to use specify the following
+
+    {{> accordion/render
+            id='faq'
+            items=(use product.doc.items.questions as='accordionItem')
+    }}
+
+Where `id` is the html ID the div gets (and other identifiers are based on).
+
+Where items is an array of the following:
+
+* `title`: the title in the accordion header
+* `body`: the body to show in the accordion element.
+
+Optional parameters:
+
+* `style`: an additional class added to the wrapper div that allows for extra styling.
+
 
 ### Breadcrumb
 
@@ -83,6 +125,10 @@ Where `breadcrumb` is an array of the following items:
 
 * `url`; the URL to link to
 * `label`; the label to show. 
+
+Optional parameters:
+
+* `style`; the class that is added to the wrapping div for the breadcrumb container.
 
 ### Carousel
 

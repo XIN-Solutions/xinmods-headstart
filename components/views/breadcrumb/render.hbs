@@ -1,4 +1,5 @@
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb {{style}}">
+
     <ol class="breadcrumb">
         {{#each items as |item|}}
             {{#unless @last}}
@@ -7,5 +8,6 @@
                 <li class="breadcrumb-item active" aria-current="page">{{item.label}}</li>
             {{/unless}}
         {{/each}}
+
     </ol>
 </nav>
