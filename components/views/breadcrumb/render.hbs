@@ -1,7 +1,11 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Library</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Data</li>
+        {{#each items as |item|}}
+            {{#unless @last}}
+                <li class="breadcrumb-item"><a href="{{item.url}}">{{item.label}}</a></li>
+            {{else}}
+                <li class="breadcrumb-item active" aria-current="page">{{item.label}}</li>
+            {{/unless}}
+        {{/each}}
     </ol>
 </nav>

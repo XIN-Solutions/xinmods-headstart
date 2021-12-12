@@ -73,11 +73,22 @@ By default the following LinkResolver is registered as follows.
 
 ## Components
 
+### Breadcrumb
+
+Render a breadcrumb in the page, to use specify the following:
+
+    {{> breadcrumb/render items=breadcrumb}}
+
+Where `breadcrumb` is an array of the following items:
+
+* `url`; the URL to link to
+* `label`; the label to show. 
+
 ### Carousel
 
 To use at least specify the following:
 
-    {{ > carousel/render id="carouselUniqueId" items=carouselItems }}
+    {{> carousel/render id="carouselUniqueId" items=carouselItems }}
 
 The `carouselItems` should have a structure of: 
 
