@@ -1,6 +1,6 @@
 {
   "name": "xinmods-headstart",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Some handy services to speed up development with XIN Mods",
   "main": "index.js",
   "repository": "https://github.com/XIN-Solutions/xinmods-headstart",
