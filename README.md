@@ -36,11 +36,30 @@ in your handlebars templates you can do the following.
 Within the `#use` block you will now have access to a variable called `tile` that contains the values
 returned by the registered model transformation function. 
 
+## Render `Image` instance
+
+There is a Handlebars helper called `image-url` that lets you render an Image instance
+returned by the xinmods package. If you pass it a string url, it'll just return the string. 
+
+	hbs.registerHelper('image-url', function(image, options) {
+
+Some examples:
+
+    # resize width = 300
+    {{image-url image width=300 }}
+
+    # resize height = 200
+    {{image-url image height=200}}           
+
+    # resize width = 300, crop to 300x200
+    {{image-url image width=300 cropX=300 cropY=200}}    
+
+
 ## Render HTML
 
 Render some HTML by creating a simple map with `(html-field doc htmlfield)`. `doc` should have the `hippo` instance.
 
-    {{{parse-html (html-field product.doc product.doc.items.body)}}}
+    {{{html-field document=product.doc field=product.doc.items.body)}}}
 
 To resolve links in the HTML block you can register a `LinkResolver` function with the `ContentParser` class.
 
@@ -52,7 +71,26 @@ By default the following LinkResolver is registered as follows.
 
     ContentParser.setLinkResolver(options.linkResolver || NoResolver);
 
+## Components
 
+### Carousel
+
+To use at least specify the following:
+
+    {{ > carousel/render id="carouselUniqueId" items=carouselItems }}
+
+The `carouselItems` should have a structure of: 
+
+* `title` the title of the slide
+* `description` the description of the slide
+* `imageUrl` the image of the carousel
+* `imageAlt` the value for the slide image alt
+
+Optional arguments:
+
+* `style`: the class to add to the `carousel` wrapper div
+* `indicators="off"`: if specified the indicator dots at the bottom disappear
+* `navigation="off"`: if specified the navigation arrows are not rendered
 
 ## HotReload frontend integration
 

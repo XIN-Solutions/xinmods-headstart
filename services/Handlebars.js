@@ -76,16 +76,22 @@ module.exports = {
 			return elseCond;
 		});
 
-		hbs.registerHelper('image-url', function(image, width, height, cropX, cropY) {
+		hbs.registerHelper('image-url', function(image, options) {
 			if (!image) {
 				return null;
 			}
 
+			if (typeof(image) === 'string') {
+				return image;
+			}
+
+			const {width, height, cropX, cropY} = options.hash ?? {};
+
 			const cloned = image.clone();
 
-			if (width && width !== '-') {
+			if (width) {
 				cloned.scaleWidth(width);
-			} else if (height && height !== '-') {
+			} else if (height) {
 				cloned.scaleHeight(height);
 			}
 
@@ -96,19 +102,19 @@ module.exports = {
 			return cloned.toUrl();
 		});
 
-		hbs.registerHelper('html-field', function(doc, html) {
-			return {
-				doc,
-				html
-			};
-		});
-
-		hbs.registerAsyncHelper('parse-html', async function(options, cb) {
+		hbs.registerAsyncHelper('html-field', async function(options, cb) {
 			const ContentParser = require('./ContentParser.js');
+			const {document, field} = options.hash ?? {};
+			if (!document) {
+				throw new Error("Expected `document=<value>` with .hippo field in html-field include.");
+			}
+			if (!field) {
+				throw new Error("Expected `field=<html-object>` field in html-field include.");
+			}
 			const parsedContent = (
 				await ContentParser.parseHtml(
-					options.doc.hippo,
-					options.html.items.html
+					document.hippo,
+					field.items.html
 				)
 			);
 			cb(parsedContent);
@@ -145,17 +151,22 @@ module.exports = {
 	 *
 	 * @param hbs	handlebars instance
 	 */
-	initialise(app, hbs, rootFolder) {
+	initialise(app, hbs, rootFolder, headstartRootFolder = null) {
 
 		return new Promise((resolve, reject) => {
 
 			this.registerHelpers(hbs);
 
+			const nodeFolder = headstartRootFolder ??`${rootFolder}/node_modules/xinmods-headstart`;
+
 			/**
 			 * Configure the handlebars engine
 			 */
 			app.engine('hbs', hbs.express4({
-				partialsDir: rootFolder + '/views/partials',
+				partialsDir: [
+					`${nodeFolder}/components/views`,
+					rootFolder + '/views/partials',
+				],
 				layoutsDir: rootFolder + '/views/layouts',
 				cache: true
 			}));
