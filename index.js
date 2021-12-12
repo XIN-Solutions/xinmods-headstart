@@ -74,7 +74,22 @@ module.exports = {
 		const HotReload = require('./services/HotReload.js');
 		const ContentParser = require('./services/ContentParser.js');
 
-		const NoResolver = (linkInfo) => { console.log("Did not resolve", JSON.stringify(linkInfo, null, 4)); return '#'};
+		const NoResolver = (linkInfo) => {
+			const Models = require('./services/Models.js');
+			if (!linkInfo.ref) {
+				console.log("Cannot determine type for link, `ref` not available.", linkInfo);
+				return "#";
+			}
+
+			const url = Models.transform(linkInfo.ref, 'link');
+			if (url) {
+				return url;
+			}
+
+			console.log("Did not resolve", JSON.stringify(linkInfo, null, 4));
+			return '#';
+
+		};
 		ContentParser.setLinkResolver(options.linkResolver || NoResolver);
 
 		// allow for json bodies

@@ -27,8 +27,9 @@ is the variation into which the model can be created. This allows you to have se
 the same data.
 
 
-The third parameter is the function that converts some incoming information into something else. Then 
-in your handlebars templates you can do the following. 
+The third parameter is the function that converts some incoming information into something else. 
+
+Then in your handlebars templates you can do the following. 
 
         <h2>Variations</h2>
         {{#use product.doc.items.variations as='tile'}}
@@ -49,7 +50,6 @@ or as an inline function:
         <pre>
             {{{json (use product.doc.items.variations as='tile')}}}
         </pre>
-
 
 You can feed it an array of elements that must be modelled, or a single object.
 
@@ -82,15 +82,23 @@ instance. The `field` value is the rich text object that is to be translated.
 
     {{{html-field document=product.doc field=product.doc.items.body)}}}
 
-To resolve links in the HTML block you can register a `LinkResolver` function with the `ContentParser` class.
-
-By default, the following LinkResolver is registered as follows.
+To resolve links in the HTML block you can register a `LinkResolver` function with the `ContentParser` class. Its
+shape is as follows:
 
     const NoResolver = (linkInfo) => { 
         console.log("Did not resolve", linkInfo); return '#'
     };
 
     ContentParser.setLinkResolver(options.linkResolver || NoResolver);
+
+By default, a `LinkResolver` is registered that tries to get URLs from documents by requesting their 'link' variation
+model transformation. For example, if you have a `xinmods:product` type, you might create a link generator as follows:
+
+    Models.register("xinmods:product", "link", (product) => {
+        return product.path.replace("/content/documents", "");
+    });
+
+You must make sure to use `fetch` to pre-fetch the documents referenced by the HTML field.
 
 ## Components
 
