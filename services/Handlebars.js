@@ -146,6 +146,11 @@ module.exports = {
 			return options.fn ? options.fn(result) : result;
 		});
 
+		hbs.registerHelper("get-config", function(config) {
+			const Config = require('./AppConfig.js');
+			return Config[config];
+		});
+
 		/**
 		 * Handlebars block helper to check if an env var is set to true or not
 		 */

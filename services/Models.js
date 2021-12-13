@@ -11,11 +11,14 @@ module.exports = {
      * @param type {string} the type to register the function for
      * @param variation {string} the variation of the decorator
      * @param decorator {function<object>} the data decorator function
-     * @param force {boolean} if true, ignore previous decorators for this type and overwrite.
      */
-    register(type, variation, decorator, force = false) {
-        if (this.transformations[type] && !force) {
-            throw new Error("Decorating the same type twice.");
+    register(type, variation, decorator) {
+        if (this.transformations[type] && this.transformations[type][variation]) {
+            console.log("Registering existing type variation, will override: ", type, variation);
+        }
+
+        if (!decorator) {
+            throw new Error("No decorator function specified.");
         }
 
         this.transformations[type] = this.transformations[type] || {};

@@ -62,13 +62,16 @@ module.exports = {
 
 	/**
 	 * Initialise the express JS application
+	 *
 	 * @param express the express module
  	 * @param app the application instance
 	 * @param hbs the express-hbs instance
-	 * @poram options {object} the options
+	 *
+	 * @param options {object} the options
+	 * @param options.onReload {Function[]} a function that transforms `link` objects into a url.
 	 * @param options.linkResolver {Function<object>} a function that transforms `link` objects into a url.
 	 */
-	expressJsInit(express, app, hbs, options = {linkResolver: () => { return '#' }}) {
+	expressJsInit(express, app, hbs, options = {onReload: [], linkResolver: () => { return '#' }}) {
 
 		const Handlebars = require('./services/Handlebars.js');
 		const HotReload = require('./services/HotReload.js');
@@ -96,7 +99,13 @@ module.exports = {
 		app.use(express.json());
 
 		// initialise handlebars and attach hotreload.
-		Handlebars.initialise(app, hbs, process.cwd()).then(() => { HotReload.start(); });
+		Handlebars
+			.initialise(app, hbs, process.cwd())
+			.then(() => {
+				HotReload.start({
+					onReload: options.onReload.length ? options.onReload : [options.onReload]
+				});
+			});
 
 	}
 

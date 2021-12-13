@@ -14,7 +14,6 @@
 
 /** Inspiration for code: https://nimblewebdeveloper.com/blog/hot-reload-nodejs-server */
 
-
 const chokidar = require("chokidar");
 const WebSocket = require('ws');
 const Config = require('./AppConfig.js');
@@ -35,7 +34,7 @@ module.exports = {
 			const localId = id.substr(process.cwd().length);
 
 			//Ignore anything not in server/app
-			if (localId.match(/^\/src\/express\//)) {
+			if (localId.match(/^\/src\//)) {
 				//Remove the module from the cache
 				delete require.cache[id];
 			}
@@ -85,16 +84,17 @@ module.exports = {
 		}
 
 		//Set up watcher to watch all files in ./server/app
-		const watcher = chokidar.watch(["./src/express", "assets/dist/"]);
+		const watcher = chokidar.watch(
+			Config.hotReloadPaths?.split(",") ?? ["./src", "assets/dist/"]
+		);
 
 		watcher.on("ready", () => {
 
 			const handler = (type) => {
 				return (file) => {
 
-
-					if (file.match(/\.js$/) && file.indexOf('src/express') !== -1) {
-						console.log(type + " in JS detected, reloading .. ");
+					if (file.match(/\.js$/) && file.indexOf('src/') !== -1) {
+						console.log(type + " in JS detected, reloading .. ", file);
 						this.clearRequireCache();
 						options.onReload.forEach((rCall) => rCall());
 					}
@@ -111,7 +111,6 @@ module.exports = {
 			// You could customise this to only run on new/save/delete etc
 			// This will also pass the file modified into the callback
 			// however for this example we aren't using that information
-			watcher.on("add", handler("New file"));
 			watcher.on("change", handler("Change"));
 			watcher.on("unlink", handler("Deletion"));
 		});

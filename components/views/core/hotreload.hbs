@@ -1,0 +1,78 @@
+{{#if (equals (get-config 'hotReload') true) }}
+    <script type='text/javascript'>
+
+        (function(undefined) {
+
+            var Config = {
+                hotReload: {{fallback (get-config "hotReload") false }},
+                hotPort: "{{get-config 'hotReloadPort'}}"
+            }
+
+            /**
+             * If hotreload is on, let's start a websocket connection
+             */
+            function initialiseHotReload() {
+
+                var port = Config.hotPort;
+                var socket = new WebSocket("ws://localhost:" + port);
+
+                // opened
+                socket.onopen = function() {
+                    console.log("Connected to HotReload");
+                };
+
+                // got a message!
+                socket.onmessage = function(msg) {
+                    try {
+
+                        const actionMsg = JSON.parse(msg.data);
+
+                        if (actionMsg.action === "reload") {
+                            const stylesheets = document.querySelectorAll("link[rel='stylesheet']");
+                            let idx = 0;
+                            for (const el of stylesheets) {
+
+                                // is this the one we're interested in?
+                                if (el.getAttribute("href").indexOf(actionMsg.file) === -1) {
+                                    return;
+                                }
+
+                                // make sure we have the original URL
+                                if (el.dataset.href) {
+                                    el.dataset.href = el.getAttribute("href");
+                                }
+
+                                // Update the URL
+                                var url = el.dataset.href;
+                                var hasRequestParam = url.indexOf("?") !== -1;
+                                var timestamp = "tstamp=" + new Date().getTime();
+                                el.setAttribute("href", url + (hasRequestParam? "&" : "?") + timestamp);
+
+                                ++idx;
+                            }
+                        }
+                    }
+                    catch (ex) {
+                        console.error("Couldn't parse incoming payload", msg.data, ex);
+                    }
+                };
+
+                socket.onclose = function() {
+                    console.error("HotReload connection troubles. Retrying");
+                    setTimeout(initialiseHotReload, 4000);
+                };
+
+            }
+
+            //
+            //  Initialise swiper belts
+            //
+            document.addEventListener('DOMContentLoaded', function() {
+                initialiseHotReload();
+            });
+
+        })();
+
+    </script>
+
+{{/if}}

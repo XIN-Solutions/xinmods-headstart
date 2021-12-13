@@ -160,72 +160,12 @@ Optional arguments:
 ## HotReload frontend integration
 
 To integrate the backend's websocket messaging notifications regarding updates to the backend's code 
-(styles for example), you can add the following snippet to where ever you think is best. Relies on jQuery, but
-should be easy enough to make less jQuery-y.
+(styles for example), you can add the following snippet to where ever you think is best. 
 
-Also relies on a Config object with a `hotReload` boolean property to be available on the window context. 
-    
-    (function($, undefined) {
-    
-        /**
-         * If hotreload is on, let's start a websocket connection
-         */
-        function initialiseHotReload() {
+    {{> core/hotreload }}
 
-            if (window.Config && Config.hotReload) {
-                var port = Config.hotPort;
-                var socket = new WebSocket("ws://localhost:" + port);
-    
-                // opened
-                socket.onopen = function() {
-                    console.log("Connected to HotReload");
-                };
-    
-                // got a message!
-                socket.onmessage = function(msg) {
-                    try {
-    
-                        const actionMsg = JSON.parse(msg.data);
-    
-                        if (actionMsg.action === "reload") {
-                            $("link[rel='stylesheet']").each(function(idx, el) {
-    
-                                // is this the one we're interested in?
-                                if ($(el).attr("href").indexOf(actionMsg.file) === -1) {
-                                    return;
-                                }
-    
-                                // make sure we have the original URL
-                                if (!$(el).data("href")) {
-                                    $(el).data("href", $(el).attr("href"));
-                                }
-    
-                                // Update the URL
-                                var url = $(el).data("href");
-                                var hasRequestParam = url.indexOf("?") !== -1;
-                                var timestamp = "tstamp=" + new Date().getTime();
-                                $(el).attr("href",url + (hasRequestParam? "&" : "?") + timestamp);
-                            })
-                        }
-                    }
-                    catch (ex) {
-                        console.error("Couldn't parse incoming payload", msg.data, ex);
-                    }
-                };
-    
-                socket.onclose = function() {
-                    console.error("HotReload connection troubles. Retrying");
-                    setTimeout(initialiseHotReload, 4000);
-                };
-    
-            }
-        }
-    
-        //
-        //  Initialise swiper belts
-        //
-        $(document).ready(function() {
-            initialiseHotReload();
-        });
-    
-    })(jQuery);
+To enable it, you must set the following environment variables:
+
+* `HOT_RELOAD = true`; must be true for this to work.
+* `HOT_RELOAD_PORT`; the port at which websocket server is opened, by default 30303.
+
