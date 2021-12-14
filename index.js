@@ -100,7 +100,7 @@ module.exports = {
 
 		// determine the on reload handler list.
 		const onReload = (
-			options.onReload
+			options.onReload && options.onReload.length > 0
 				? (options.onReload.length ? options.onReload : [options.onReload])
 				: []
 		);

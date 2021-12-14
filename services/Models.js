@@ -6,6 +6,24 @@ module.exports = {
     transformations: {},
 
     /**
+     * Register a bunch of decorator functions, you can pass it a map
+     * of functions, which reads easier than having each of them inserted
+     * individually.
+     *
+     * @param type {string} the type to register the function map for
+     * @param map {object<string, function>>} an object with all maps
+     */
+    registerMultiple(type, map) {
+        for (const variation in map) {
+            if (!map.hasOwnProperty(variation)) {
+                continue;
+            }
+
+            this.register(type, variation, map[variation]);
+        }
+    },
+
+    /**
      * Register a new decorator based on the type.
      *
      * @param type {string} the type to register the function for
