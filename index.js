@@ -71,13 +71,13 @@ module.exports = {
 	 * @param options.onReload {Function[]} a function that transforms `link` objects into a url.
 	 * @param options.linkResolver {Function<object>} a function that transforms `link` objects into a url.
 	 */
-	expressJsInit(express, app, hbs, options = {onReload: [], linkResolver: () => { return '#' }}) {
+	expressJsInit(express, app, hbs, options = {onReload: []}) {
 
 		const Handlebars = require('./services/Handlebars.js');
 		const HotReload = require('./services/HotReload.js');
 		const ContentParser = require('./services/ContentParser.js');
 
-		const NoResolver = (linkInfo) => {
+		const DefaultResolver = (linkInfo) => {
 			const Models = require('./services/Models.js');
 			if (!linkInfo.ref) {
 				console.log("Cannot determine type for link, `ref` not available.", linkInfo);
@@ -93,7 +93,7 @@ module.exports = {
 			return '#';
 
 		};
-		ContentParser.setLinkResolver(options.linkResolver || NoResolver);
+		ContentParser.setLinkResolver(options.linkResolver || DefaultResolver);
 
 		// allow for json bodies
 		app.use(express.json());
