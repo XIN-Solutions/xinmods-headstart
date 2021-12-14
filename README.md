@@ -169,3 +169,6 @@ To enable it, you must set the following environment variables:
 * `HOT_RELOAD = true`; must be true for this to work.
 * `HOT_RELOAD_PORT`; the port at which websocket server is opened, by default 30303.
 
+If you don't add the partial in your handlebars, you still get the reloading of the `require`-cache, which means your
+backend code will automatically reload. 
+

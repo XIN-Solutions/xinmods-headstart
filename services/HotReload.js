@@ -19,6 +19,7 @@ const WebSocket = require('ws');
 const Config = require('./AppConfig.js');
 
 let wsServer = null;
+const reloadHandlers = [];
 
 module.exports = {
 
@@ -75,12 +76,29 @@ module.exports = {
 	},
 
 	/**
+	 * Add a new reload handler.
+	 *
+	 * @param doThis {function} the function to invoke when reload is required.
+	 * @param name {string} the name of the handler
+	 */
+	onReload(doThis, name = null) {
+		if (name) {
+			console.log("Registering hot reload handler: ", name);
+		}
+		reloadHandlers.push(doThis);
+	},
+
+	/**
 	 * Start the hot reloading process
 	 */
 	start(options = {onReload: []}) {
 
 		if (!Config.hotReload) {
 			return;
+		}
+
+		if (options.onReload) {
+			options.onReload.forEach(handler => reloadHandlers.push(handler));
 		}
 
 		//Set up watcher to watch all files in ./server/app
@@ -96,7 +114,8 @@ module.exports = {
 					if (file.match(/\.js$/) && file.indexOf('src/') !== -1) {
 						console.log(type + " in JS detected, reloading .. ", file);
 						this.clearRequireCache();
-						options.onReload.forEach((rCall) => rCall());
+						console.log("Reload handlers: ", reloadHandlers.length);
+						reloadHandlers.forEach((rCall) => rCall());
 					}
 
 					if (file.match(/\.css$/)) {

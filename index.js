@@ -98,13 +98,18 @@ module.exports = {
 		// allow for json bodies
 		app.use(express.json());
 
+		// determine the on reload handler list.
+		const onReload = (
+			options.onReload
+				? (options.onReload.length ? options.onReload : [options.onReload])
+				: []
+		);
+
 		// initialise handlebars and attach hotreload.
 		Handlebars
 			.initialise(app, hbs, process.cwd())
 			.then(() => {
-				HotReload.start({
-					onReload: options.onReload.length ? options.onReload : [options.onReload]
-				});
+				HotReload.start({ onReload });
 			});
 
 	}
