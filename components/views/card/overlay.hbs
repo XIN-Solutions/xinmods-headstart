@@ -1,0 +1,30 @@
+<div class="card text-white text-{{fallback textAlign "left"}} {{?: fullHeight "h-100" ""}}">
+
+    {{#if item.image}}
+        <img src="{{item.image}}"
+             class="card-img {{?: fullHeight "h-100" ""}}"
+             {{#if fullHeight}}style="object-fit: cover;"{{/if}}
+             alt="{{item.title}}"
+        >
+    {{/if}}
+
+    <div class="card-img-overlay">
+        {{#if item.title}}
+            <h5 class="card-title">{{item.title}}</h5>
+        {{/if}}
+        {{#if item.description}}
+            <p class="card-text">{{item.description}}</p>
+        {{/if}}
+
+        {{#each item.links as |link|}}
+            <a href="{{link.url}}" class="btn btn-{{fallback link.type "link"}}">
+                {{link.label}}
+            </a>
+        {{/each}}
+
+        {{#if item.link}}
+            <a href="{{item.link}}" class="stretched-link">&nbsp;</a>
+        {{/if}}
+
+    </div>
+</div>

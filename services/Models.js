@@ -27,7 +27,7 @@ module.exports = {
      * Register a new decorator based on the type.
      *
      * @param type {string} the type to register the function for
-     * @param variation {string} the variation of the decorator
+     * @param variation {string|'link'|'accordionItem'|'card'|'carouselSlide'} the variation of the decorator
      * @param decorator {function<object>} the data decorator function
      */
     register(type, variation, decorator) {

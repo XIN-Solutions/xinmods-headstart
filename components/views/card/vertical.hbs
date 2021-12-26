@@ -1,0 +1,40 @@
+<div class="card text-{{fallback textAlign "left"}} {{?: fullHeight "h-100" ""}}">
+
+    {{#if item.headerText}}
+        <div class="card-header">{{item.headerText}}</div>
+    {{/if}}
+
+    {{#if (and item.image (not item.imageBottom))}}
+        <img src="{{item.image}}" class="card-img-top" alt="{{item.title}}">
+    {{/if}}
+
+    <div class="card-body">
+        {{#if item.title}}
+            <h5 class="card-title">{{item.title}}</h5>
+        {{/if}}
+        {{#if item.description}}
+            <p class="card-text">{{item.description}}</p>
+        {{/if}}
+
+        {{#if item.link}}
+            <a href="{{item.link}}" class="stretched-link"></a>
+        {{/if}}
+
+        {{#if (has-items item.links)}}
+            {{#each item.links as |link|}}
+                <a href="{{link.url}}" class="btn btn-{{fallback link.type "link"}}">
+                    {{link.label}}
+                </a>
+            {{/each}}
+        {{/if}}
+    </div>
+
+
+    {{#if (and item.image item.imageBottom)}}
+        <img src="{{item.image}}" class="card-img-bottom" alt="{{item.title}}">
+    {{/if}}
+
+    {{#if item.footerText}}
+        <div class="card-footer text-muted">{{item.footerText}}</div>
+    {{/if}}
+</div>
