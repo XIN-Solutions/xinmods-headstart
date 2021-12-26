@@ -12,6 +12,10 @@
         {{#if item.title}}
             <h5 class="card-title">{{item.title}}</h5>
         {{/if}}
+
+        {{#if item.subtitle}}
+            <h6 class="card-subtitle mb-2 text-muted">{{item.subtitle}}</h6>
+        {{/if}}
         {{#if item.description}}
             <p class="card-text">{{item.description}}</p>
         {{/if}}
@@ -28,7 +32,6 @@
             {{/each}}
         {{/if}}
     </div>
-
 
     {{#if (and item.image item.imageBottom)}}
         <img src="{{item.image}}" class="card-img-bottom" alt="{{item.title}}">

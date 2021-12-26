@@ -138,6 +138,40 @@ Optional parameters:
 
 * `style`; the class that is added to the wrapping div for the breadcrumb container.
 
+### Card
+
+Render a card in the page, use the following:
+
+    {{> card/render variation="overlay" fullHeight=true item=(use product as="card") }}
+
+Where `item` is supposed to be of type `Card` (described in `models.d.ts`):
+    
+    interface Card {
+        headerText ?: string;
+    
+        title: string;
+        description: string;
+        link?: string;
+    
+        image: string;
+        imageBottom ?: boolean;
+        links ?: CardLink[];
+    
+        footerText ?: string;
+    }
+
+    interface CardLink {
+        label: string;
+        url: string;
+        type: 'link' | 'primary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark';
+    }
+
+The partial takes a few parameters:
+
+* `variation`: `horizontal`, `overlay`, or the default `vertical` (optional)
+* `fullHeight`: a boolean that if set to true will fill the height in the column (optional)
+
+
 ### Carousel
 
 To use at least specify the following:

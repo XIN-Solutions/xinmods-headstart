@@ -8,8 +8,17 @@
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">{{item.title}}</h5>
-                <p class="card-text">{{item.summary}}</p>
+                {{#if item.title}}
+                    <h5 class="card-title">{{item.title}}</h5>
+                {{/if}}
+
+                {{#if item.subtitle}}
+                    <h6 class="card-subtitle mb-2 text-muted">{{item.subtitle}}</h6>
+                {{/if}}
+
+                {{#if item.summary}}
+                    <p class="card-text">{{item.summary}}</p>
+                {{/if}}
 
                 {{#each item.links as |link|}}
                     <a href="{{link.url}}" class="btn btn-{{fallback link.type "link"}}">
