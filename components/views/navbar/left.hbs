@@ -1,0 +1,10 @@
+{{#if (or image name)}}
+    <a class="navbar-brand" href="{{fallback link '#'}}">
+        {{#if image}}
+            <img class="navbar-brandimage d-inline-block" src="{{image}}" alt="{{name}}">
+        {{/if}}
+        {{#if name}}
+            <span class="navbar-brandname d-inline-block">{{name}}</span>
+        {{/if}}
+    </a>
+{{/if}}

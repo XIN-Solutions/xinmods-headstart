@@ -191,6 +191,114 @@ Optional arguments:
 * `indicators="off"`: if specified the indicator dots at the bottom disappear
 * `navigation="off"`: if specified the navigation arrows are not rendered
 
+### Navbar
+
+The Bootstrap 5 Navbar component has been modelled as well. To use it write something like the following:
+
+    {{> navbar/render
+            style="navbar--example"
+            image='https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg'
+            navigation=navItems
+    }}
+
+This component allows you to overlay different files:
+
+* `navbar/left.hbs`: the brand and product name part of the nav bar
+* `navbar/search.hbs`: the search form
+* `navbar/items.hbs`: the navbar items to render
+
+The model used to render the navbar HBS component:
+
+
+	interface Navbar {
+
+	    /**
+	     * ID for navbar toggler
+	     */
+	    id ?: string;
+
+	    /**
+	     * The style classes added to the wrapper
+	     */
+	    style ?: string;
+
+	    /**
+	     * Classes pushed onto the navbar wrapper div
+	     */
+	    barClasses ?: string;
+
+	    /**
+	     * Brand name (optional)
+	     */
+	    name ?: string;
+
+	    /**
+	     * Image shown (optional)
+	     */
+	    image ?: string;
+
+	    /**
+	     * Link name and/or image navigate to when clicked
+	     */
+	    link ?: string;
+
+	    /**
+	     * If set to true, search bar is shown
+	     */
+	    showSearch ?: boolean;
+
+	    /**
+	     * How to position the navbar.
+	     */
+	    position: 'default' | 'fixed-top' | 'fixed-bottom' | 'sticky-top'
+
+	    /**
+	     * A set of navigation items
+	     */
+	    navigation ?: NavbarItem[]
+
+	}
+
+The `navigation` option you can pass into the `navbar/render` partial has the following shape:
+
+	/**
+	 * A navigation item that is rendered in the navigation bar.
+	 */
+	interface NavbarItem {
+
+	    /**
+	     * Label in menu item
+	     */
+	    label: string;
+
+	    /**
+	     * Where does it link to?
+	     */
+	    url: string;
+
+	    /**
+	     * If true, will be grayed out
+	     */
+	    disabled ?: boolean;
+
+	    /**
+	     * If true, it's the current page.
+	     */
+	    active ?: boolean;
+
+	    /**
+	     * If children specified, we need to render an ID
+	     */
+	    id ?: string;
+
+	    /**
+	     * Children of this item (no url required if filled out)
+	     */
+	    children ?: NavbarItem[];
+	}
+
+
+
 ## HotReload frontend integration
 
 To integrate the backend's websocket messaging notifications regarding updates to the backend's code 

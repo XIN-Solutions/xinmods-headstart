@@ -1,0 +1,29 @@
+<ul class="navbar-nav">
+    {{#each navigation as |navItem|}}
+        {{#if (has-items navItem.children)}}
+            <li class="nav-item dropdown">
+                <a href="#"
+                   class="nav-link dropdown-toggle"
+                   id="{{navItem.id}}" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                >
+                    {{navItem.label}}
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="{{navItem.id}}"
+                    {{#each navItem.children as |childItem|}}
+                        <li><a href="{{childItem.url}}" class="dropdown-item">{{childItem.label}}</a></li>
+                    {{/each}}
+                </a>
+            </li>
+        {{else}}
+            <li class="nav-item">
+                <a href="{{fallback navItem.url '#'}}"
+                   class="nav-link {{?: navItem.active 'active' ''}} {{?: navItem.disabled 'disabled' ''}}"
+                   {{#if navItem.active}}aria-current="page"{{/if}}
+                >
+                    {{navItem.label}}
+                </a>
+            </li>
+        {{/if}}
+    {{/each}}
+</ul>
