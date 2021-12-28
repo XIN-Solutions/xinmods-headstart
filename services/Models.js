@@ -24,6 +24,16 @@ module.exports = {
     },
 
     /**
+     * Register a default decorator that will be the fallback
+     *
+     * @param variation {string|'link'|'accordionItem'|'card'|'carouselSlide'} the variation to register a default implementation for
+     * @param decorator {function} the data decorator function
+     */
+    registerDefault(variation, decorator) {
+        this.register('__default__', variation, decorator);
+    },
+
+    /**
      * Register a new decorator based on the type.
      *
      * @param type {string} the type to register the function for
@@ -52,13 +62,13 @@ module.exports = {
      * @returns {{type}|*|null}
      */
     transform(context, variation = 'default') {
-        const {type} = context;
+        let {type} = context;
 
-        if (!context.type) {
-            throw new Error("Context object does not have 'type' to determine transformation for.");
+        if (!type) {
+            throw new Error("This model does not contain a `type` field.");
         }
 
-        if (this.transformations[type][variation]) {
+        if (this.transformations[type]?.[variation]) {
             return this.transformations[type][variation](context);
         }
 

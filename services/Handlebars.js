@@ -124,6 +124,16 @@ module.exports = {
 		hbs.registerHelper('use', function(model, options) {
 			const Models = require('./Models.js');
 
+			if (!model) {
+				console.error("The model does not exist.")
+				return null;
+			}
+
+			if (!options) {
+				console.error("No options specified.");
+				return null;
+			}
+
 			const variation = options.hash.as;
 			if (!variation) {
 				throw new Error("Expected 'variation' parameter on #use helper.");
