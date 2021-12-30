@@ -1,7 +1,7 @@
 <nav class="navbar {{position}} navbar-expand-lg {{fallback barClasses "navbar-light bg-light"}} {{style}}">
 
     <div class="container-fluid">
-        {{> navbar/left . }}
+        {{> navbar/left navigation }}
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#{{fallback id 'navbartoggler'}}" aria-controls="{{fallback id 'navbartoggler'}}"
@@ -11,7 +11,7 @@
 
         <div class="collapse navbar-collapse" id="{{fallback id 'navbartoggler'}}">
 
-            {{> navbar/items }}
+            {{> navbar/items navigation }}
 
             {{#if enableSearch}}
                 {{> navbar/search }}
