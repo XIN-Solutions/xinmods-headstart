@@ -112,6 +112,9 @@ module.exports = {
 				HotReload.start({ onReload });
 			});
 
+		// initialise out-of-the-box model transformations
+		require('./models/NavModels.js').initialise();
+
 	}
 
 

@@ -1,6 +1,5 @@
 const _ = require('lodash');
-const {Models, HotReload} = require("xinmods-headstart");
-const Clazz = require("./ProductModels.js");
+const {Models, HotReload} = require("../index.js");
 
 /**
  *
@@ -36,6 +35,7 @@ module.exports = {
      * @returns {Navbar} navigation bar
      */
     convertNavbar(navDoc) {
+        /** @type {HippoConnection} */
         const hippo = navDoc.hippo;
         const homelink = navDoc.items.homeLink;
 
