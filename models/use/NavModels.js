@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {Models, HotReload} = require("../index.js");
+const {Models, HotReload} = require("../../index.js");
 
 /**
  *
@@ -35,13 +35,14 @@ module.exports = {
      * @returns {Navbar} navigation bar
      */
     convertNavbar(navDoc) {
+
         /** @type {HippoConnection} */
         const hippo = navDoc.hippo;
         const homelink = navDoc.items.homeLink;
 
         const navbar = {
             id: navDoc.id,
-            link: null,
+            link: Models.transform(homelink.link.ref, 'link'),
             name: navDoc.items.title ?? null,
             image: hippo.getImageFromLinkSync(navDoc.items.image).scaleHeight(80).toUrl(),
             navigation: _.values(navDoc.items.children).map(child => convertChild(child))
@@ -65,10 +66,6 @@ module.exports = {
      */
     initialise() {
         this.register();
-        HotReload.onReload(() => {
-            const Clazz = require('./NavModels.js');
-            Clazz.register();
-        }, "Navigation Models");
     }
 
 

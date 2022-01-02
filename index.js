@@ -53,6 +53,10 @@ module.exports = {
 	 */
 	Models: require('./services/Models.js'),
 
+	ModelServices: {
+		Navigation: require('./models/services/Navigation.js')
+	},
+
 	/**
 	 * Exposes a function that creates an instance to the Bloomreach backend, depending
 	 * on the NODE_ENV it will use different paths.
@@ -113,7 +117,7 @@ module.exports = {
 			});
 
 		// initialise out-of-the-box model transformations
-		require('./models/NavModels.js').initialise();
+		require('./models/use/NavModels.js').initialise();
 
 	}
 
