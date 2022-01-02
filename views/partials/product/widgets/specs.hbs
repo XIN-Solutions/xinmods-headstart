@@ -1,0 +1,6 @@
+<h2>Specifications</h2>
+{{#each product.items.specs as |spec|}}
+    <div>
+        <strong>{{spec.items.key}}: </strong>{{spec.items.label}}
+    </div>
+{{/each}}

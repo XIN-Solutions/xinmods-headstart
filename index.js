@@ -117,7 +117,7 @@ module.exports = {
 			});
 
 		// initialise out-of-the-box model transformations
-		require('./models/use/NavModels.js').initialise();
+		require('./models/use/NavigationModels.js').initialise();
 
 	}
 

@@ -51,12 +51,20 @@ module.exports = {
         return navbar;
     },
 
+    /**
+     * @returns {?string} the redirect target link.
+     */
+    redirectLink(redirectDoc) {
+        return redirectDoc?.items?.redirectTarget ?? null;
+    },
+
 
     /**
      * Register all the model transformations for product related elements.
      */
     register() {
         Models.register("xinmods:navigation", "navbar", this.convertNavbar);
+        Models.register("xinmods:redirect", "link", this.redirectLink);
     },
 
 

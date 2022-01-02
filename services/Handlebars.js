@@ -193,7 +193,8 @@ module.exports = {
 			 */
 			app.engine('hbs', hbs.express4({
 				partialsDir: [
-					`${nodeFolder}/components/views`,
+					`${nodeFolder}/views/components`,
+					`${nodeFolder}/views/partials`,
 					rootFolder + '/views/partials',
 				],
 				layoutsDir: rootFolder + '/views/layouts',
@@ -202,8 +203,9 @@ module.exports = {
 
 			app.set('view engine', 'hbs');
 			app.set('views', [
-				`${rootFolder}/views/pages`,
+				`${nodeFolder}/views/pages`,
 				`${rootFolder}/views/partials`,
+				`${rootFolder}/views/pages`,
 				`${rootFolder}/views/components`
 			]);
 
