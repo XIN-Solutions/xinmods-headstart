@@ -53,6 +53,10 @@ module.exports = {
 	 */
 	Models: require('./services/Models.js'),
 
+	Controllers: {
+		Products: require('./controllers/ProductController.js')
+	},
+
 	ModelServices: {
 		Navigation: require('./models/services/Navigation.js')
 	},
@@ -118,6 +122,7 @@ module.exports = {
 
 		// initialise out-of-the-box model transformations
 		require('./models/use/NavigationModels.js').initialise();
+		require('./models/use/ProductModels.js').initialise();
 
 	}
 
