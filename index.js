@@ -16,57 +16,62 @@ module.exports = {
 	/**
 	 * AppInfo helps you get information about the current package.json
 	 */
-	AppInfo: require('./services/AppInfo.js'),
+	AppInfo: require('./src/services/AppInfo.js'),
 
 	/**
 	 * Exposes a simple configuration object based on env vars.
 	 */
-	AppConfig: require('./services/AppConfig.js'),
+	AppConfig: require('./src/services/AppConfig.js'),
 
 	/**
 	 * Simple Email service that uses SES and is able to inline CSS styles into handlebars template
 	 */
-	EmailService: require('./services/EmailService.js'),
+	EmailService: require('./src/services/EmailService.js'),
 
 	/**
 	 * A ping service that can touch a file in S3, used for broadcasting frontend events to all the nodes.
 	 */
-	HostPingService: require('./services/HostPingService.js'),
+	HostPingService: require('./src/services/HostPingService.js'),
 
 	/**
 	 * Has a great number of useful handlebar template functions
 	 */
-	Handlebars: require('./services/Handlebars.js'),
+	Handlebars: require('./src/services/Handlebars.js'),
 
 	/**
 	 * Little helper that clears node requires cache when something changes.
 	 */
-	HotReload: require('./services/HotReload.js'),
+	HotReload: require('./src/services/HotReload.js'),
 
 	/**
 	 * Helps parse richtext content and substitute links and images
 	 */
-	ContentParser: require('./services/ContentParser.js'),
+	ContentParser: require('./src/services/ContentParser.js'),
+
+	/**
+	 * Hooks for registering code to run at predetermined points.
+	 */
+	Hooks: require('./src/services/Hooks.js'),
 
 	/**
 	 * The decorator service.
 	 */
-	Models: require('./services/Models.js'),
+	Models: require('./src/services/Models.js'),
 
 	Controllers: {
-		Products: require('./controllers/ProductController.js')
+		Products: require('./src/controllers/ProductController.js')
 	},
 
 	ModelServices: {
-		Navigation: require('./models/services/Navigation.js')
+		Navigation: require('./src/models/services/Navigation.js')
 	},
 
 	/**
 	 * Exposes a function that creates an instance to the Bloomreach backend, depending
 	 * on the NODE_ENV it will use different paths.
 	 */
-	Hippo: require('./services/Hippo.js'),
-	Bloomreach: require('./services/Hippo.js'),
+	Hippo: require('./src/services/Hippo.js'),
+	Bloomreach: require('./src/services/Hippo.js'),
 
 	/**
 	 * Initialise the express JS application
@@ -81,12 +86,12 @@ module.exports = {
 	 */
 	expressJsInit(express, app, hbs, options = {onReload: []}) {
 
-		const Handlebars = require('./services/Handlebars.js');
-		const HotReload = require('./services/HotReload.js');
-		const ContentParser = require('./services/ContentParser.js');
+		const Handlebars = require('./src/services/Handlebars.js');
+		const HotReload = require('./src/services/HotReload.js');
+		const ContentParser = require('./src/services/ContentParser.js');
 
 		const DefaultResolver = (linkInfo) => {
-			const Models = require('./services/Models.js');
+			const Models = require('./src/services/Models.js');
 			if (!linkInfo.ref) {
 				console.log("Cannot determine type for link, `ref` not available.", linkInfo);
 				return "#";
@@ -121,8 +126,8 @@ module.exports = {
 			});
 
 		// initialise out-of-the-box model transformations
-		require('./models/use/NavigationModels.js').initialise();
-		require('./models/use/ProductModels.js').initialise();
+		require('./src/models/use/NavigationModels.js').initialise();
+		require('./src/models/use/ProductModels.js').initialise();
 
 	}
 

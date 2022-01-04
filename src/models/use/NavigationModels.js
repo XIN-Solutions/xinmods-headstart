@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {Models, HotReload} = require("../../index.js");
+const {Models, HotReload} = require("../../../index.js");
 
 /**
  *

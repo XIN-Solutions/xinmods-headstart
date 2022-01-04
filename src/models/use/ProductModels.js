@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {Models, HotReload} = require('../../../../../marnix-programming/xin/xinmods-headstart');
+const {Models, HotReload} = require('../../../index.js');
 
 module.exports = {
 

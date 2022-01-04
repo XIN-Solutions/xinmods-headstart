@@ -11,7 +11,8 @@
 
  */
 
-let hippo = null;
+const _ = require('lodash');
+const Hooks = require('../services/Hooks.js');
 
 module.exports = {
 
@@ -27,15 +28,21 @@ module.exports = {
         const Products = require('../models/services/Products.js');
         const Navigation = require('../models/services/Navigation.js');
 
+        // execute beforeRender hooks and smash them into a single map that
+        // will function as the base of the render context object.
+        const baseMap = await Hooks.invokeAllAsMap([
+            "beforeRender.common",
+            "beforeRender.product",
+            "beforeRender.product.landing"
+        ]);
+
         const productList = await Products.getAllProducts(hippo);
-        const navigation = await Navigation.getNavigationByPath(hippo, "/content/documents/site/navigation/default");
 
         resp.render(
-            'products/all_products', {
+            'products/all_products', Object.assign(baseMap, {
                 productList,
-                navigation,
                 baseModel: { type: '__default__' }
-            }
+            })
         );
     },
 
@@ -49,16 +56,21 @@ module.exports = {
     async detailPage(hippo, req, resp) {
 
         const Products = require('../models/services/Products.js');
-        const Navigation = require('../models/services/Navigation.js');
+
+        // execute beforeRender hooks and smash them into a single map that
+        // will function as the base of the render context object.
+        const baseMap = await Hooks.invokeAllAsMap([
+            "beforeRender.common",
+            "beforeRender.product",
+            "beforeRender.product.detail"
+        ]);
 
         const product = await Products.getProduct(hippo, req.params.name);
-        const navigation = await Navigation.getNavigationByPath(hippo, "/content/documents/site/navigation/default");
 
-        resp.render('products/product', {
+        resp.render('products/product', Object.assign(baseMap, {
             product,
-            navigation,
             baseModel: product
-        });
+        }));
 
     },
 

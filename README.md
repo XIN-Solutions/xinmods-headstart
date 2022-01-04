@@ -7,6 +7,57 @@ To understand how to interact with the BloomreachXM backend enriched with the XI
 * https://npmjs.com/package/xinmods
 * https://xinsolutions.co.nz/bloomreach-headless-cms-caas
 
+## Hooks
+
+The module code can be hooked into by registering small pieces of code against one or more identifiers. For example,
+providing information about common page components like the navigation can be accomplished by code like this:
+
+    /**
+     * Add loader that will retrieve the correct navigation on all pages
+     */
+    headstart.Hooks.register("beforeRender.common", async () => {
+        const {Navigation} = require('xinmods-headstart').ModelServices;
+        const navigation = await Navigation.getNavigationByPath(hippo, "/content/documents/site/navigation/default");
+        return {navigation};
+    });
+
+This will register a piece of code against a handler called `beforeRender.common`. Each handler identifier can have
+multiple functions registered against it. In this case a map with a `navigation` field is returned. The `commonpage`
+relies on one being there to show the navigation component.
+
+If you want to invoke hooks in your code you could write something like the code below -- it is found in the product
+detail controller action.
+
+    const {Hooks} = require('xinmods-headstart');
+
+	// execute beforeRender hooks and smash them into a single map that
+    // will function as the base of the render context object.
+    const baseMap = await Hooks.invokeAllAsMap([
+        "beforeRender.common",
+        "beforeRender.product",
+        "beforeRender.product.detail"
+    ]);
+
+    const product = await Products.getProduct(hippo, req.params.name);
+
+    resp.render('products/product', Object.assign(baseMap, {
+        product,
+        baseModel: product
+    }));
+
+As you can see `invokeAllAsMap` will invoke all functions registered against the list of identifiers and return
+results that are not falsy as a single map into `baseMap`. 
+
+### Out-of-the-box hook identifiers
+
+A list of out of the box hook identifiers can be found below:
+
+* `beforeRender.common` -- invoked on all page renders
+* `beforeRender.product` -- invoked on all page renders specific to the product module
+* `beforeRender.product.detail` -- invoked only on the product detail page
+* `beforeRender.product.landing` -- invoked only on the products landing page (product overview)
+
+
 ## Model transformations
 
 You can register a model transformation, this will help you get a more useful representation in Handlebars.
