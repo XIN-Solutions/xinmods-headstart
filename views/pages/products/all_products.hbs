@@ -1,14 +1,18 @@
-{{!< empty }}
+{{#contentFor "body"}}
 
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h1>All products</h1>
-        </div>
-        {{#each productList as |product|}}
-            <div class="col-4">
-                {{> card/render item=(use product as="card") }}
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>All products</h1>
             </div>
-        {{/each}}
+            {{#each productList as |product|}}
+                <div class="col-4">
+                    {{> card/render item=(use product as="card") }}
+                </div>
+            {{/each}}
+        </div>
     </div>
-</div>
+
+{{/contentFor}}
+
+{{> commonpage/page }}

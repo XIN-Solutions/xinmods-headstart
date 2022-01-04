@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+
+        {{> commonpage/htmlhead }}
+        {{> commonpage/customhtmlhead }}
+        {{block "customhtmlhead"}}
+
+        {{> commonpage/metatags }}
+
+    </head>
+    <body class="{{use baseModel as='bodyClass'}}">
+
+        <!-- body top -->
+        {{> commonpage/bodytop }}
+        {{block "custombodytop" }}
+
+        <!-- page body -->
+        {{{block "body"}}}
+
+        <!-- body bottom -->
+        {{> commonpage/bodybottom }}
+        {{block "custombodybottom" }}
+
+        <!-- include footer scripts -->
+        {{> commonpage/footerscripts }}
+        {{> commonpage/customerfooterscripts }}
+        {{block "customfooterscripts"}}
+    </body>
+</html>

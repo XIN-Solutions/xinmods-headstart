@@ -1,42 +1,44 @@
-{{!< empty }}
+{{#contentFor "body"}}
+    <style>
+        .carousel--withShadow .carousel-control-prev-icon,
+        .carousel--withShadow .carousel-control-next-icon {
+            padding: 40px;
+            background-color: black;
+            background-size: 50%;
+        }
 
-<style>
-    .carousel--withShadow .carousel-control-prev-icon,
-    .carousel--withShadow .carousel-control-next-icon {
-        padding: 40px;
-        background-color: black;
-        background-size: 50%;
-    }
-
-    .carousel--withShadow .carousel-caption {
-        padding: 5px 10px;
-        background-color: rgba(0, 0, 0, 0.8);
-        margin-bottom: 20px;
-    }
-
-
-    p img {
-        max-width: 80%;
-        display: block;
-        margin: auto;
-    }
-</style>
+        .carousel--withShadow .carousel-caption {
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
 
 
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            {{> product/header }}
+        p img {
+            max-width: 80%;
+            display: block;
+            margin: auto;
+        }
+    </style>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                {{> product/header }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+                {{> product/main }}
+            </div>
+
+            <div class="col-4">
+                {{> product/sidebar }}
+            </div>
         </div>
     </div>
+{{/contentFor}}
 
-    <div class="row">
-        <div class="col-8">
-            {{> product/main }}
-        </div>
-
-        <div class="col-4">
-            {{> product/sidebar }}
-        </div>
-    </div>
-</div>
+{{> commonpage/page }}

@@ -86,6 +86,16 @@ module.exports = {
         return product.items.images.map(image => hippo.getImageFromLinkSync(image));
     },
 
+    productTitle(product) {
+        return "Product - " + product.items.name;
+    },
+
+    productMetatags(product) {
+        return [
+            {name: "tag1", content: "tag content"}
+        ];
+    },
+
     /**
      * Register all the model transformations for product related elements.
      */
@@ -96,6 +106,10 @@ module.exports = {
         Models.register("xinmods:product", "breadcrumb", this.productBreadcrumb);
         Models.register("xinmods:product", "slides", this.productSlides);
         Models.register("xinmods:product", "images", this.productImages);
+
+        Models.register("xinmods:product", "pageTitle", this.productTitle);
+        Models.register("xinmods:product", "metatags", this.productMetatags);
+        Models.register("xinmods:product", "bodyClass", () => "Page--product");
     },
 
 

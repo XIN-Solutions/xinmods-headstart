@@ -72,7 +72,8 @@ module.exports = {
             return this.transformations[type][variation](context);
         }
 
-        throw new Error(`Did not find a transformer for type: '${context.type}' with variation '${variation}'`);
+        console.log(`Did not find a transformer for type: '${context.type}' with variation '${variation}'`);
+        return null;
     }
 
 
