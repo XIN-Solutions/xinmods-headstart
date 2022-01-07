@@ -24,13 +24,49 @@ module.exports = {
      * Get all products from the repository.
      *
      * @param hippo {HippoConnection} the hippo connection to use.
+     * @param limit {?number} a potential limit
      * @returns {Promise<*[]>}
      */
-    async getAllProducts(hippo) {
+    async getHighlightedProducts(hippo, limit = null) {
 
-        const query = hippo.newQuery().type("xinmods:product").includePath("/content/documents").build();
-        const results = await hippo.executeQuery(query, {fetch: ProductFullFetch});
+        const query = (
+            hippo.newQuery()
+                .type("xinmods:product")
+                .includePath("/content/documents")
+                .where().equals("xinmods:highlight", true).end()
+                .orderBy("hippostdpubwf:publicationDate", "desc")
+        );
 
+        if (limit !== null) {
+            query.limit(limit);
+        }
+
+        const results = await hippo.executeQuery(query.build(), {fetch: ProductFullFetch});
+        return results.documents;
+    },
+
+
+    /**
+     * Get all products from the repository.
+     *
+     * @param hippo {HippoConnection} the hippo connection to use.
+     * @param limit {?number} a potential limit
+     * @returns {Promise<*[]>}
+     */
+    async getAllProducts(hippo, limit = null) {
+
+        const query = (
+            hippo.newQuery()
+                .type("xinmods:product")
+                .includePath("/content/documents")
+                .orderBy("hippostdpubwf:publicationDate", "desc")
+        );
+
+        if (limit !== null) {
+            query.limit(limit);
+        }
+
+        const results = await hippo.executeQuery(query.build(), {fetch: ProductFullFetch});
         return results.documents;
     }
 

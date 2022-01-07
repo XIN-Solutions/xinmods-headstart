@@ -1,21 +1,23 @@
-<nav class="navbar {{position}} navbar-expand-lg {{fallback barClasses "navbar-light bg-light"}} {{style}}">
+{{#if navigation}}
+    <nav class="navbar {{position}} navbar-expand-lg {{fallback barClasses "navbar-light bg-light"}} {{style}}">
 
-    <div class="container-fluid">
-        {{> navbar/left navigation }}
+        <div class="container-fluid">
+            {{> navbar/left navigation }}
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#{{fallback id 'navbartoggler'}}" aria-controls="{{fallback id 'navbartoggler'}}"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#{{fallback id 'navbartoggler'}}" aria-controls="{{fallback id 'navbartoggler'}}"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="{{fallback id 'navbartoggler'}}">
+            <div class="collapse navbar-collapse" id="{{fallback id 'navbartoggler'}}">
 
-            {{> navbar/items navigation }}
+                {{> navbar/items navigation }}
 
-            {{#if enableSearch}}
-                {{> navbar/search }}
-            {{/if}}
+                {{#if enableSearch}}
+                    {{> navbar/search }}
+                {{/if}}
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+{{/if}}

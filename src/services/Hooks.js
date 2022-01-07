@@ -18,6 +18,31 @@ module.exports = {
     funcs: {},
 
     /**
+     * Generate a view (GET) endpoint that builds its view model off of registered hooks with IDs
+     * specified in `ids`. The default template to use is specified in `template` but can be overridden with
+     * a hook.
+     *
+     * @param template  {string} the template to use for rendering
+     * @param ids {string[]} a list of hook ids to execute before rendering the template
+     * @returns {(function(*=, *=): Promise<void>)|*}
+     */
+    viewEndpoint(template, ids) {
+        const thiz = this;
+
+        return async function(req, resp) {
+            try {
+                const viewModel = await thiz.invokeAllAsMap(ids, req, resp);
+                const useTemplate = viewModel?.template ?? template;
+                resp.render(useTemplate, viewModel);
+            }
+            catch (ex) {
+                console.log("Something went wrong: ", ex);
+                resp.status(500).send(ex.message);
+            }
+        };
+    },
+
+    /**
      * Register a new hook against a particular ID. One ID can have multiple hooks against it
      *
      * @param id    {string} the identifier to register
@@ -40,7 +65,7 @@ module.exports = {
      * @param options {object} the options object
      * @param options.prefix {boolean} if true then search for any hook starting with 'id'
      */
-    find(id, options = {prefix: true}) {
+    find(id, options = {prefix: false}) {
         const searchTerm = _.isArray(id) ? id : [id];
 
         // iterate over all keys and determine which match
@@ -52,7 +77,7 @@ module.exports = {
                 continue;
             }
             // not searching for prefix and didn't find a direct match? continue.
-            else if (!options.prefix && searchTerm.find(term => funcKey === term).length === 0) {
+            else if (!options.prefix && !searchTerm.find(term => funcKey === term)) {
                 continue;
             }
 
@@ -73,7 +98,7 @@ module.exports = {
      * @returns {Promise<*[]>}
      */
     async invokeAll(ids, ...args) {
-        const all = this.find(ids, {prefix: true});
+        const all = ids[0] instanceof Function ? ids : this.find(ids, {prefix: false});
         const results = all.map(func => func(...args));
 
         // get a list of normal results

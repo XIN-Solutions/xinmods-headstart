@@ -13,66 +13,80 @@
 
 const _ = require('lodash');
 const Hooks = require('../services/Hooks.js');
+const Products = require("../models/services/Products.js");
 
 module.exports = {
 
-
     /**
-     * The product landing page rendering
-     *
-     * @param hippo {HippoConnection} the hippo connection
-     * @param req   the request object
-     * @param resp  the response object
+     * Initialise running the landing hook
+     * @param hippo {HippoConnection}
+     * @private
      */
-    async landingPage(hippo, req, resp) {
-        const Products = require('../models/services/Products.js');
-        const Navigation = require('../models/services/Navigation.js');
+    _initialiseLandingHook(hippo) {
 
-        // execute beforeRender hooks and smash them into a single map that
-        // will function as the base of the render context object.
-        const baseMap = await Hooks.invokeAllAsMap([
-            "beforeRender.common",
-            "beforeRender.product",
-            "beforeRender.product.landing"
-        ]);
+        Hooks.register("view.product.landing", async (req, resp) => {
+            const productList = await Products.getAllProducts(hippo);
 
-        const productList = await Products.getAllProducts(hippo);
-
-        resp.render(
-            'products/all_products', Object.assign(baseMap, {
+            return {
                 productList,
-                baseModel: { type: '__default__' }
-            })
-        );
+                baseModel: {type: '__default__'}
+            };
+        });
     },
 
     /**
-     * The product detail page
-     *
-     * @param hippo {HippoConnection} the hippo connection
-     * @param req   the request object
-     * @param resp  the response object
+     * Initialise the view product detail
+     * @param hippo
+     * @private
      */
-    async detailPage(hippo, req, resp) {
+    _initialiseProductDetailHook(hippo) {
 
-        const Products = require('../models/services/Products.js');
+        Hooks.register("view.product.detail", async (req, resp) => {
 
-        // execute beforeRender hooks and smash them into a single map that
-        // will function as the base of the render context object.
-        const baseMap = await Hooks.invokeAllAsMap([
-            "beforeRender.common",
-            "beforeRender.product",
-            "beforeRender.product.detail"
-        ]);
+            const product = await Products.getProduct(hippo, req.params.name);
 
-        const product = await Products.getProduct(hippo, req.params.name);
+            return {
+                product,
+                baseModel: product,
+            };
+        });
+    },
 
-        resp.render('products/product', Object.assign(baseMap, {
-            product,
-            baseModel: product
-        }));
+    /**
+     * Initialise the widget that can be used on the homepage.
+     *
+     * @param hippo {HippoConnection}
+     * @private
+     */
+    _initialiseWidget(hippo) {
+
+        Hooks.register("view.widgets.home.highlighted", async () => {
+
+            const products = await Products.getHighlightedProducts(hippo);
+            return {
+                template: "product/widgets/productlist",
+                model: {
+                    title: "Highlights",
+                    products
+                }
+            };
+        });
+
+        Hooks.register("view.widgets.home.recent", async () => {
+
+            const products = await Products.getAllProducts(hippo, 4);
+            return {
+                template: "product/widgets/productlist",
+                model: {
+                    title: "Recent",
+                    products
+                }
+            };
+
+        });
 
     },
+
 
     /**
      * Initialise product endpoints
@@ -84,23 +98,21 @@ module.exports = {
 
         console.log("Initialising product controller.");
 
-        app.get("/products", async (req, resp) => {
-            try {
-                await this.landingPage(hippo, req, resp);
-            }
-            catch (err) {
-                console.error("Exception occurred rendering landing page: ", err);
-            }
-        });
+        this._initialiseProductDetailHook(hippo);
+        this._initialiseLandingHook(hippo);
+        this._initialiseWidget(hippo);
 
-        app.get('/product/:name', async (req, resp) => {
-            try {
-                await this.detailPage(hippo, req, resp);
-            }
-            catch (err) {
-                console.error("Exception occurred rendering detail page: ", err);
-            }
-        });
+        app.get("/products", Hooks.viewEndpoint('products/all_products', [
+            "view.common",
+            "view.product",
+            "view.product.landing"
+        ]));
+
+        app.get("/product/:name", Hooks.viewEndpoint('products/product', [
+            "view.common",
+            "view.product",
+            "view.product.detail"
+        ]));
 
     }
 
