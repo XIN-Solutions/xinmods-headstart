@@ -44,7 +44,7 @@ module.exports = {
 	HotReload: require('./src/services/HotReload.js'),
 
 	/**
-	 * Helps parse richtext content and substitute links and images
+	 * Helps parse rich text content and substitute links and images
 	 */
 	ContentParser: require('./src/services/ContentParser.js'),
 
@@ -59,11 +59,14 @@ module.exports = {
 	Models: require('./src/services/Models.js'),
 
 	Controllers: {
-		Products: require('./src/controllers/ProductController.js')
+		Products: require('./src/controllers/ProductController.js'),
+		Blogging: require('./src/controllers/BloggingController.js')
 	},
 
 	ModelServices: {
-		Navigation: require('./src/models/services/Navigation.js')
+		Navigation: require('./src/models/services/Navigation.js'),
+		Blogging: require('./src/models/services/Blogging.js'),
+		Products: require('./src/models/services/Products.js')
 	},
 
 	/**
@@ -128,6 +131,8 @@ module.exports = {
 		// initialise out-of-the-box model transformations
 		require('./src/models/use/NavigationModels.js').initialise();
 		require('./src/models/use/ProductModels.js').initialise();
+		require('./src/models/use/BlogModels.js').initialise();
+		require('./src/models/use/BlogAuthorModels.js').initialise();
 
 	}
 

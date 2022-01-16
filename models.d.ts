@@ -61,6 +61,13 @@ interface List {
     items: Card[]
 }
 
+interface MetaTag {
+    name: string;
+    content: string;
+}
+
+type MetaTags = MetaTag[];
+
 
 interface Navbar {
 

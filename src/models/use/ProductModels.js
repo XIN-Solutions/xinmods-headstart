@@ -1,5 +1,6 @@
 const _ = require('lodash');
-const {Models, HotReload} = require('../../../index.js');
+const Models = require('../../services/Models.js');
+const HotReload = require('../../services/HotReload.js');
 
 module.exports = {
 

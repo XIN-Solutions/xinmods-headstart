@@ -1,0 +1,18 @@
+{{#contentFor "body"}}
+
+    <div class="container">
+        <div class="row">
+            <div class="author">
+                <h1 class="author__name">{{author.items.name}}</h1>
+                <div class="author__bio">
+                    {{{nl2br author.items.bio}}}
+                </div>
+                <img src="{{image-url authorImage width=300 cropX=300 cropY=300}}" class="author__image">
+            </div>
+
+        </div>
+    </div>
+
+{{/contentFor}}
+
+{{> commonpage/page }}

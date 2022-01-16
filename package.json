@@ -16,7 +16,7 @@
   "author": "Marnix Kok <marnix@xinsolutions.co.nz>",
   "license": "Apache-2.0",
   "dependencies": {
-    "xinmods": "^1.6.8",
+    "xinmods": "^1.6.9",
     "lodash": "^4.17.21",
     "aws-sdk": "^2.1041.0",
     "juice": "^8.0.0",
