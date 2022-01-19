@@ -1,16 +1,21 @@
 {{#if embed.provider}}
     <div class="Embed" id="{{id}}"></div>
-    <style>
-        .Embed iframe {
-            width: 100%;
-            height: 500px;
-        }
-    </style>
+    {{#if (equals embed.provider "Youtube")}}
+        <style>
+            #{{id}} iframe {
+                width: 100%;
+                height: 500px;
+            }
+        </style>
+    {{/if}}
     <script>
         (function() {
             const id = "{{id}}";
             const url = "{{embed.url}}";
 
+            /**
+             * Interpret the oembed result we're getting from the server.
+             */
             function interpretOEmbed() {
                 if (!this.responseText) {
                     return
@@ -21,6 +26,7 @@
 
                 document.getElementById("{{id}}").append(el);
 
+                // replace inserted scripts with actual script tags, so that they are loaded properly.
                 for (const oldScript of Array.from(el.querySelectorAll("script"))) {
                     const newScript = document.createElement("script");
                     const scriptAttrs = Array.from(oldScript.attributes);
@@ -31,12 +37,14 @@
 
             }
 
+            /**
+             * When document loaded, shoot off request to oembed proxy.
+             */
             document.addEventListener("DOMContentLoaded", () => {
                 const xhr = new XMLHttpRequest();
                 xhr.addEventListener("load", interpretOEmbed);
                 xhr.open("GET", "/blog/embed?url=" + encodeURIComponent(url));
                 xhr.send();
-
             });
         })();
     </script>

@@ -26,6 +26,14 @@ const EmbedConfigs = [
     },
 
     {
+        provider: "TikTok",
+        endpoint: "https://www.tiktok.com/oembed",
+        scheme: [
+            "https?://(www\\.)?tiktok\\.com/.*",
+        ]
+    },
+
+    {
         provider: "Instagram",
         endpoint: "https://api.instagram.com/oembed",
         scheme: [
@@ -54,8 +62,7 @@ const EmbedConfigs = [
         provider: "Reddit",
         endpoint: "https://www.reddit.com/oembed",
         scheme: [
-            "https://reddit.com/.*",
-            "https://www.reddit.com/.*"
+            "https?://(www\\.)?reddit.com/.*",
         ]
     }
 ]
