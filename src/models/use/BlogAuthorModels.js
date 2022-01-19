@@ -16,6 +16,7 @@ module.exports = {
         return {
             link: Models.transform(doc, 'link'),
             title: doc.items.name,
+            description: doc.items.summary,
             image: hippo.getImageFromLinkSync(doc.items.image).scaleWidth(500).crop(500, 400).toUrl()
         };
     },

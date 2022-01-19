@@ -2,14 +2,26 @@
 
     <div class="container">
         <div class="row">
-            <div class="author">
-                <h1 class="author__name">{{author.items.name}}</h1>
-                <div class="author__bio">
-                    {{{nl2br author.items.bio}}}
+            <div class="col-12">
+                <div class="author">
+                    <h1 class="author__name">{{author.items.name}}</h1>
+                    <div class="author__bio">
+                        {{{nl2br author.items.bio}}}
+                    </div>
+                    <img src="{{image-url authorImage width=300 cropX=300 cropY=300}}" class="author__image">
                 </div>
-                <img src="{{image-url authorImage width=300 cropX=300 cropY=300}}" class="author__image">
+
+                <br><br>
+
+                <h2>Recent Articles</h2>
+                <p>Total articles written: {{totalArticles}}</p>
             </div>
 
+            {{#each articles as |article|}}
+                <div class="col-3">
+                    {{> card/render item=(use article as='card') }}
+                </div>
+            {{/each}}
         </div>
     </div>
 

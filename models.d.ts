@@ -25,6 +25,10 @@ interface AccordionItem {
     body: string;
 }
 
+interface HippoDocument extends Object {
+    hippo: object;
+}
+
 
 /**
  * Model for slide of carousel
@@ -152,4 +156,11 @@ interface NavbarItem {
      * Children of this item (no url required if filled out)
      */
     children ?: NavbarItem[];
+}
+
+
+interface BlogEmbedConfig {
+    provider: string;
+    endpoint: string;
+    scheme: string[];
 }

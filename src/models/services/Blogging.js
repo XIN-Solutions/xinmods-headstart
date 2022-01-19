@@ -18,7 +18,7 @@ const PostFetch = [
     "heroImage/link",
     "author/link",
     "items/images/*/link",
-    "text/links/*",
+    "text/links/*"
 ];
 
 const AuthorFetch = [
@@ -33,7 +33,7 @@ module.exports = {
      * @param path {string}
      * @returns {Promise<void>}
      */
-    async getBlogAtPath(hippo, path) {
+    async getPostAtPath(hippo, path) {
         const doc = await hippo.getDocumentByPath(`/content/documents/blog/articles/${path}`, {fetch: PostFetch});
         return doc;
     },
@@ -83,7 +83,7 @@ module.exports = {
         }
 
         const results = await hippo.executeQuery(query.build(), {fetch: AuthorFetch});
-        return results.documents;
+        return {totalSize: results.totalSize, authors: results.documents};
     },
 
 
@@ -108,7 +108,7 @@ module.exports = {
         );
 
         const results = await hippo.executeQuery(query, {fetch: PostFetch});
-        return results.documents;
+        return {totalSize: results.totalSize, articles: results.documents};
     },
 
     /**
@@ -116,7 +116,7 @@ module.exports = {
      *
      * @param hippo {HippoConnection} the hippo connection to use.
      * @param limit {?number} a potential limit
-     * @returns {Promise<*[]>}
+     * @returns {Promise<{}>}
      */
     async getAllPosts(hippo, limit = null) {
 
@@ -132,7 +132,7 @@ module.exports = {
         }
 
         const results = await hippo.executeQuery(query.build(), {fetch: PostFetch});
-        return results.documents;
+        return {totalSize: results.totalSize, articles: results.documents};
     }
 
 

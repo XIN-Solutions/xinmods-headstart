@@ -20,14 +20,23 @@ module.exports = {
 		 * Simple JSON output handlebars helper.
 		 */
 		hbs.registerHelper('json', function(context) {
-			return JSON.stringify(context, null, 4);
+			const skipHippo = (key, value) => {
+				if (key === 'hippo') { return null; }
+				return value;
+			}
+
+			return JSON.stringify(context, skipHippo, 4);
 		});
 
         /**
          * Simple JSON output handlebars helper.
          */
         hbs.registerHelper('jsonflat', function(context) {
-            return JSON.stringify(context);
+			const skipHippo = (key, value) => {
+				if (key === 'hippo') { return null; }
+				return value;
+			}
+            return JSON.stringify(context, skipHippo);
         });
 
         hbs.registerHelper('nl2br', function(context) {
@@ -70,6 +79,12 @@ module.exports = {
 			return elseCond;
 		});
 
+		hbs.registerHelper("concat", function(...args) {
+			const items = [...args];
+			items.pop();
+			return items.join("");
+		});
+
 		hbs.registerHelper('fallback', function(v1, elseCond, options) {
 			if(v1) {
 				return v1;
@@ -86,9 +101,10 @@ module.exports = {
 				return image;
 			}
 
-			const {width, height, cropX, cropY} = options.hash ?? {};
+			const {width, height, cropX, cropY, document} = options.hash ?? {};
 
-			const cloned = image.clone();
+			const isRawImg = document && image.type && image.link;
+			const cloned = isRawImg? document.hippo.getImageFromLinkSync(image) : image.clone();
 
 			if (width) {
 				cloned.scaleWidth(width);
@@ -115,7 +131,7 @@ module.exports = {
 			const parsedContent = (
 				await ContentParser.parseHtml(
 					document.hippo,
-					field.items.html
+					(field.items?.html ?? field.items?.text)
 				)
 			);
 			cb(parsedContent);
@@ -139,6 +155,8 @@ module.exports = {
 				throw new Error("Expected 'variation' parameter on #use helper.");
 			}
 
+			const baseDoc = options.hash.document;
+
 			// is an array, or is map with only numeric keys.
 			const isMultiple = (
 				_.isArray(model) ||
@@ -147,12 +165,12 @@ module.exports = {
 
 			if (isMultiple) {
 				const elements = _.map(_.values(model), (el) => {
-					return Models.transform(el, variation);
+					return Models.transform(el, variation, baseDoc ?? null);
 				});
 				return options.fn? options.fn(elements) : elements;
 			}
 
-			const result = Models.transform(model, variation);
+			const result = Models.transform(model, variation, baseDoc ?? null);
 			return options.fn ? options.fn(result) : result;
 		});
 

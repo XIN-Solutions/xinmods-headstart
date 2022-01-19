@@ -133,6 +133,7 @@ module.exports = {
 		require('./src/models/use/ProductModels.js').initialise();
 		require('./src/models/use/BlogModels.js').initialise();
 		require('./src/models/use/BlogAuthorModels.js').initialise();
+		require('./src/models/use/BlogEmbedModels.js').initialise();
 
 	}
 

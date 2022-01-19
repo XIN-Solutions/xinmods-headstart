@@ -59,9 +59,10 @@ module.exports = {
      *
      * @param context {object} the context of information that has a .type field which indicates how to decorate
      * @param variation {string} the name of the variation function to use for the decorating.
+     * @param document {object} the base document the context belongs to, will be passed onto transformation function
      * @returns {{type}|*|null}
      */
-    transform(context, variation = 'default') {
+    transform(context, variation = 'default', document = null) {
         let {type} = context;
 
         if (!type) {
@@ -69,7 +70,7 @@ module.exports = {
         }
 
         if (this.transformations[type]?.[variation]) {
-            return this.transformations[type][variation](context);
+            return this.transformations[type][variation](context, document);
         }
 
         console.log(`Did not find a transformer for type: '${context.type}' with variation '${variation}'`);

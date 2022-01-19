@@ -1,0 +1,43 @@
+{{#if embed.provider}}
+    <div class="Embed" id="{{id}}"></div>
+    <style>
+        .Embed iframe {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+    <script>
+        (function() {
+            const id = "{{id}}";
+            const url = "{{embed.url}}";
+
+            function interpretOEmbed() {
+                if (!this.responseText) {
+                    return
+                }
+                const data = JSON.parse(this.responseText);
+                const el = document.createElement("div");
+                el.innerHTML = data.html;
+
+                document.getElementById("{{id}}").append(el);
+
+                for (const oldScript of Array.from(el.querySelectorAll("script"))) {
+                    const newScript = document.createElement("script");
+                    const scriptAttrs = Array.from(oldScript.attributes);
+                    scriptAttrs.forEach( attr => newScript.setAttribute(attr.name, attr.value) );
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                }
+
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const xhr = new XMLHttpRequest();
+                xhr.addEventListener("load", interpretOEmbed);
+                xhr.open("GET", "/blog/embed?url=" + encodeURIComponent(url));
+                xhr.send();
+
+            });
+        })();
+    </script>
+{{/if}}

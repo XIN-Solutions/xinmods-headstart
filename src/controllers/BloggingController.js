@@ -13,8 +13,11 @@
 
  */
 
+const _ = require('lodash');
 const Hooks = require('../services/Hooks.js');
+const Models = require('../services/Models.js');
 const Blogging = require('../models/services/Blogging.js');
+const axios = require('axios');
 
 module.exports = {
 
@@ -23,6 +26,8 @@ module.exports = {
         app.get("/blog", Hooks.viewEndpoint("blogging/blog_landing", [
             'view.common', 'view.blogging', 'view.blogging.landing'
         ]));
+
+        app.get("/blog/embed", this.embedRetrieval);
 
         app.get("/blog/authors", Hooks.viewEndpoint("blogging/author_landing", [
             'view.common', 'view.blogging',
@@ -42,11 +47,106 @@ module.exports = {
             'view.common', 'view.blogging', 'view.blogging.category'
         ]));
 
-        app.get("/blog/:category/:articlePath*", Hooks.viewEndpoint("blogging/blog_detail", [
+        app.get("/blog/:articlePath(*)", Hooks.viewEndpoint("blogging/blog_detail", [
             'view.common', 'view.blogging', 'view.blogging.article'
         ]));
 
+
     },
+
+    async embedRetrieval(req, resp) {
+        const model = {
+            type: "xinmods:blogexternal",
+            items: { url: req.query.url }
+        };
+
+        const provider = Models.transform(model, 'embed');
+        if (!provider) {
+            resp.status(400);
+            return null;
+        }
+
+        try {
+            const oEmbedRequestUrl = provider.endpoint + "?format=json&url=" + encodeURIComponent(req.query.url);
+            const embedResponse = await axios.get(oEmbedRequestUrl)
+            resp.send(embedResponse.data);
+        }
+        catch (ex) {
+            console.error("Something went wrong trying to get the embed: ", ex.message, 'for', req.query.url);
+            resp.status(400);
+        }
+    },
+
+    /**
+     * Author landing hook implementation
+     *
+     * @param hippo {HippoConnection}
+     * @param req Request object
+     * @param resp Response object
+     * @returns {Promise<{authors: *[]}>}
+     */
+    async authorLanding(hippo, req, resp) {
+        const authors = await Blogging.getAllAuthors(hippo);
+        return {
+            authors: authors.authors,
+            totalAuthors: authors.totalSize
+        };
+    },
+
+    /**
+     * Author detail
+     *
+     * @param hippo {HippoConnection}
+     * @param req Request object
+     * @param resp Response object
+     * @returns {Promise<{authors: *[]}>}
+     */
+    async authorDetail(hippo, req, resp) {
+
+        const author = await Blogging.getAuthorAtPath(hippo, req.params.authorName);
+        if (!author) {
+            resp.status(404);
+            return;
+        }
+
+        const articles = await Blogging.getPostsByAuthor(hippo, author, 16);
+
+        return {
+            baseModel: author,
+            author,
+            authorImage: hippo.getImageFromLinkSync(author.items.image),
+            totalArticles: articles.totalSize,
+            articles: articles.articles
+        };
+
+    },
+
+    /**
+     * Blog post detail page
+     *
+     * @param hippo {HippoConnection}
+     * @param req
+     * @param resp
+     */
+    async postDetail(hippo, req, resp) {
+        const post = await Blogging.getPostAtPath(hippo, req.params.articlePath);
+
+        if (!post) {
+            resp.status(404);
+            return;
+        }
+
+        const author = await Blogging.getAuthorAtPath(hippo, post.items.author.link.ref.name);
+        return {
+            baseModel: post,
+            post,
+            author,
+            contentItems: _.values(post.items.content),
+            heroImage: hippo.getImageFromLinkSync(post.items.heroImage),
+        };
+    },
+
+
 
     /**
      * initialise the blog-related endpoints
@@ -59,17 +159,15 @@ module.exports = {
         this.initialiseEndpoints(app);
 
         Hooks.register('view.blogging.authors.landing', async (req, resp) => {
-            const authors = await Blogging.getAllAuthors(hippo);
-            return { authors };
+            return this.authorLanding(hippo, req, resp);
         });
 
         Hooks.register('view.blogging.authors.detail', async (req, resp) => {
-            const author = await Blogging.getAuthorAtPath(hippo, req.params.authorName);
-            return {
-                baseModel: author,
-                author,
-                authorImage: hippo.getImageFromLinkSync(author.items.image)
-            };
+            return this.authorDetail(hippo, req, resp);
+        });
+
+        Hooks.register('view.blogging.article', async (req, resp) => {
+            return this.postDetail(hippo, req, resp);
         });
 
     }

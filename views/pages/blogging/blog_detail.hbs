@@ -2,8 +2,41 @@
 
     <div class="container">
         <div class="row">
-            Blog Detail
+            <div class="col-9">
+
+                <span class="storytag" style="text-transform: uppercase">{{post.items.storyTag}}</span>
+                <h1>{{post.items.title}}</h1>
+                <img width="100%" src="{{image-url heroImage width=800}}">
+
+
+                <div class="c-article">
+                    {{#each contentItems as |block|}}
+
+                        {{#if (equals block.type "xinmods:blogtext")}}
+                            {{{ html-field document=../post field=block }}}
+                        {{/if}}
+
+                        {{#if (equals block.type "xinmods:blogimage")}}
+                            {{> carousel/render
+                                    id=(concat 'carousel_' @index)
+                                    items=(use block as='slides' document=../post)
+                            }}
+                        {{/if}}
+
+                        {{#if (equals block.type "xinmods:blogexternal")}}
+                            {{> oembed/render embed=(use block as='embed') id=(concat "embed" @index)}}
+                        {{/if}}
+
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="col-3">
+                {{> card/render item=(use author as='card')}}
+            </div>
+
         </div>
+
     </div>
 
 {{/contentFor}}
