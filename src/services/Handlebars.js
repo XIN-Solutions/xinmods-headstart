@@ -43,6 +43,9 @@ module.exports = {
 			return context.replace("\n", "<br>");
 		});
 
+		hbs.registerHelper("length", function(a, options) {
+			return a.length;
+		});
 
 		hbs.registerHelper("has-items", function(a, options) {
 			return !_.isEmpty(a);

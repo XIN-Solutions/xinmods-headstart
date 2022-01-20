@@ -4,11 +4,25 @@ const HotReload = require('../../services/HotReload.js');
 
 module.exports = {
 
+    /**
+     * @param doc
+     * @returns {Breadcrumb}
+     */
+    blogPostBreadcrumb(doc) {
+        const categoryUri = _.takeRight(doc.path.split("/"), 2)[0];
+        return [
+            {url: "/", label: "Home"},
+            {url: "/blog", label: "Blog"},
+            {url: "/blog/" + doc.category.name , label: doc.category.label},
+            {url: "#", label: doc.items.title}
+        ];
+    },
 
     /**
      * Convert a blog into a card.
      *
-     * @param doc {object} the document type to convert
+     * @param doc {HippoDocument} the document type to convert
+     * @param baseDoc {HippoDocument}
      * @returns {Card} a card object
      */
     blogCard(doc, baseDoc) {
@@ -86,6 +100,7 @@ module.exports = {
         // misc related to blog page
         Models.register("xinmods:blog", "pageTitle", this.blogTitle);
         Models.register("xinmods:blog", "metatags", this.blogMetaTags);
+        Models.register("xinmods:blog", "breadcrumb", this.blogPostBreadcrumb);
         Models.register("xinmods:blog", "bodyClass", () => "Page--blog");
 
         Models.register("xinmods:blogimage", "slides", this.blogImageSlides);

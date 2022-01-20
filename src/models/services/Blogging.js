@@ -41,9 +41,29 @@ module.exports = {
             }
         );
 
-        return doc;
+        if (!doc) {
+            return null;
+        }
+
+        // fetch category
+        const category = await this.getPostCategoryAtPath(hippo, path)
+
+        return {...doc, category};
     },
 
+
+    /**
+     * Get category folder information
+     *
+     * @param hippo
+     * @param path
+     * @returns {Promise<null>}
+     */
+    async getPostCategoryAtPath(hippo, path) {
+        const catName = path.substring(0, path.indexOf("/"));
+        const catDoc = await hippo.listDocuments(`/content/documents/blog/articles`);
+        return catDoc.folders.find(folder => folder.name === catName) ?? null;
+    },
 
     /**
      * @param hippo {HippoConnection}

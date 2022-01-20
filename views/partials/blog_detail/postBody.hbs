@@ -1,0 +1,19 @@
+{{#each contentItems as |block|}}
+
+    {{#if (equals block.type "xinmods:blogtext")}}
+        {{> blog_detail/cmp-text base=../post block=block}}
+    {{/if}}
+
+    {{#if (equals block.type "xinmods:blogimage")}}
+        {{> blog_detail/cmp-carousel id=(concat 'carousel_' @index) base=../post block=block}}
+    {{/if}}
+
+    {{#if (equals block.type "xinmods:blogexternal")}}
+        {{> blog_detail/cmp-oembed block=block}}
+    {{/if}}
+
+    {{#if (equals block.type "xinmods:blogiframe") }}
+        {{> blog_detail/cmp-iframe block=block }}
+    {{/if}}
+
+{{/each}}

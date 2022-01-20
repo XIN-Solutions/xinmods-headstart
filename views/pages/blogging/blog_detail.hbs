@@ -1,50 +1,24 @@
 {{#contentFor "body"}}
 
+    {{> blog_detail/postTop . }}
+
     <div class="container">
         <div class="row">
             <div class="col-9">
-
-                <span class="storytag" style="text-transform: uppercase">{{post.items.storyTag}}</span>
-                <h1>{{post.items.title}}</h1>
-                <img width="100%" src="{{image-url heroImage width=800}}">
-
+                {{> blog_detail/postHeader .}}
 
                 <div class="c-article">
-                    {{#each contentItems as |block|}}
-
-                        {{#if (equals block.type "xinmods:blogtext")}}
-                            {{{ html-field document=../post field=block }}}
-                        {{/if}}
-
-                        {{#if (equals block.type "xinmods:blogimage")}}
-                            {{> carousel/render
-                                    id=(concat 'carousel_' @index)
-                                    items=(use block as='slides' document=../post)
-                            }}
-                        {{/if}}
-
-                        {{#if (equals block.type "xinmods:blogexternal")}}
-                            {{> oembed/render embed=(use block as='embed') id=(concat "embed" @index)}}
-                        {{/if}}
-
-                    {{/each}}
+                    {{> blog_detail/postBody . }}
                 </div>
             </div>
 
             <div class="col-3">
-                {{> card/render item=(use author as='card')}}
-
-                <div class="RelatedPosts">
-                    <h2 class="RelatedPosts__Title">Related Posts</h2>
-                    {{#each relatedPosts as |relPost|}}
-                        {{> card/render style="RelatedPosts__Card" item=(use relPost as='card' document=../post)}}
-                    {{/each}}
-                </div>
+                {{> blog_detail/postSidebar .}}
             </div>
-
         </div>
-
     </div>
+
+    {{> blog_detail/postBottom . }}
 
 {{/contentFor}}
 

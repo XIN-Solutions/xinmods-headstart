@@ -1,43 +1,55 @@
-<div id="{{id}}" class="carousel slide {{style}}" data-bs-ride="carousel">
+{{#if (equals (length items) 1)}}
 
-    {{#unless (equals indicators "off")}}
-        <div class="carousel-indicators">
-
-            {{#each items as |slide|}}
-                <button
-                        type="button"
-                        data-bs-target="#{{../id}}"
-                        data-bs-slide-to="{{@index}}"
-                        class="{{ ?: (equals @index 0) 'active' ''}}"
-                ></button>
-            {{/each}}
-        </div>
-    {{/unless}}
-
-    <div class="carousel-inner">
+    <div class="image {{style}}">
         {{#each items as |slide|}}
-            <div class="carousel-item {{ ?: (equals @index 0) 'active' ''}}">
-                <img src="{{slide.imageUrl}}" class="d-block w-100" alt="{{slide.imageAlt}}">
-                <div class="carousel-caption d-none d-md-block">
-                    {{#if slide.title}}
-                        <h5>{{slide.title}}</h5>
-                    {{/if}}
-                    {{#if slide.description}}
-                        <p>{{slide.description}}</p>
-                    {{/if}}
-                </div>
-            </div>
+            <img src="{{slide.imageUrl}}" class="d-block w-100" alt="{{slide.imageAlt}}">
+            <p class="image-description">{{slide.description}}</p>
         {{/each}}
     </div>
 
-    {{#unless (equals navigation "off")}}
-        <button class="carousel-control-prev" type="button" data-bs-target="#{{id}}" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#{{id}}" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    {{/unless}}
-</div>
+{{else}}
+
+    <div id="{{id}}" class="carousel slide {{style}}" data-bs-ride="carousel">
+
+        {{#unless (equals indicators "off")}}
+            <div class="carousel-indicators">
+
+                {{#each items as |slide|}}
+                    <button
+                            type="button"
+                            data-bs-target="#{{../id}}"
+                            data-bs-slide-to="{{@index}}"
+                            class="{{ ?: (equals @index 0) 'active' ''}}"
+                    ></button>
+                {{/each}}
+            </div>
+        {{/unless}}
+
+        <div class="carousel-inner">
+            {{#each items as |slide|}}
+                <div class="carousel-item {{ ?: (equals @index 0) 'active' ''}}">
+                    <img src="{{slide.imageUrl}}" class="d-block w-100" alt="{{slide.imageAlt}}">
+                    <div class="carousel-caption d-none d-md-block">
+                        {{#if slide.title}}
+                            <h5>{{slide.title}}</h5>
+                        {{/if}}
+                        {{#if slide.description}}
+                            <p>{{slide.description}}</p>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+
+        {{#unless (equals navigation "off")}}
+            <button class="carousel-control-prev" type="button" data-bs-target="#{{id}}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#{{id}}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        {{/unless}}
+    </div>
+{{/if}}

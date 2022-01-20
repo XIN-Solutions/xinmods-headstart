@@ -1,6 +1,6 @@
 
 {{> navbar/render
-        style="navbar--example"
+        style="c-navbar"
         position='sticky-top'
         navigation=(use navigation as='navbar')
 }}
@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            {{> breadcrumb/render items=(use baseModel as='breadcrumb')}}
+            {{> breadcrumb/render style="c-breadcrumb" items=(use baseModel as='breadcrumb')}}
         </div>
     </div>
 </div>
