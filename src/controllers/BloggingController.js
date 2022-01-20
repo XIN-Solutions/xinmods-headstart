@@ -116,7 +116,7 @@ module.exports = {
             author,
             authorImage: hippo.getImageFromLinkSync(author.items.image),
             totalArticles: articles.totalSize,
-            articles: articles.articles
+            articles: articles.articles,
         };
 
     },
@@ -137,10 +137,20 @@ module.exports = {
         }
 
         const author = await Blogging.getAuthorAtPath(hippo, post.items.author.link.ref.name);
+
+        // fetch related post images so we can turn them into cards.
+        const relatedPosts = _.values(post.items.related).map(a => a.link.ref);
+        for (const relPost of relatedPosts) {
+            const relPostHero = relPost.items.heroImage;
+            const imgRef = await hippo.getImageFromLink(relPostHero);
+            relPostHero.link.ref = imgRef.imageInfo;
+        }
+
         return {
             baseModel: post,
             post,
             author,
+            relatedPosts,
             contentItems: _.values(post.items.content),
             heroImage: hippo.getImageFromLinkSync(post.items.heroImage),
         };

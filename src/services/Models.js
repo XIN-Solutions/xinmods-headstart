@@ -70,7 +70,7 @@ module.exports = {
         }
 
         if (this.transformations[type]?.[variation]) {
-            return this.transformations[type][variation](context, document);
+            return this.transformations[type][variation](context, document ?? context);
         }
 
         console.log(`Did not find a transformer for type: '${context.type}' with variation '${variation}'`);

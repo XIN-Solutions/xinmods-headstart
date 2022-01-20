@@ -11,15 +11,15 @@ module.exports = {
      * @param doc {object} the document type to convert
      * @returns {Card} a card object
      */
-    blogCard(doc) {
+    blogCard(doc, baseDoc) {
         return {
             link: Models.transform(doc, 'link'),
             title: doc.items.title,
             image: (
-                doc.hippo
-                    .getImageFromLinkSync(doc.items.heroImage)
-                    .crop(500, 350)
-                    .toUrl()
+                baseDoc.hippo
+                    ?.getImageFromLinkSync(doc.items.heroImage)
+                    ?.crop(500, 350)
+                    ?.toUrl()
             ),
             description: doc.items.summary
         };

@@ -33,6 +33,13 @@
 
             <div class="col-3">
                 {{> card/render item=(use author as='card')}}
+
+                <div class="RelatedPosts">
+                    <h2 class="RelatedPosts__Title">Related Posts</h2>
+                    {{#each relatedPosts as |relPost|}}
+                        {{> card/render style="RelatedPosts__Card" item=(use relPost as='card' document=../post)}}
+                    {{/each}}
+                </div>
             </div>
 
         </div>

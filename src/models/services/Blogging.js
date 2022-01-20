@@ -17,6 +17,7 @@ const _ = require('lodash');
 const PostFetch = [
     "heroImage/link",
     "author/link",
+    "related/*/link",
     "items/images/*/link",
     "text/links/*"
 ];
@@ -34,9 +35,15 @@ module.exports = {
      * @returns {Promise<void>}
      */
     async getPostAtPath(hippo, path) {
-        const doc = await hippo.getDocumentByPath(`/content/documents/blog/articles/${path}`, {fetch: PostFetch});
+        const doc = await hippo.getDocumentByPath(
+            `/content/documents/blog/articles/${path}`, {
+                fetch: PostFetch
+            }
+        );
+
         return doc;
     },
+
 
     /**
      * @param hippo {HippoConnection}
