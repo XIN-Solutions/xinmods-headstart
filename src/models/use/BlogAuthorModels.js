@@ -46,12 +46,27 @@ module.exports = {
      * Register all the model transformations for product related elements.
      */
     register() {
+        Models.register("authorLanding", "metatags", () => []);
+        Models.register("authorLanding", "bodyClass", () => "Page--blogAuthorLanding");
+        Models.register("authorLanding", "pageTitle", () => "Authors");
+        Models.register("authorLanding", "breadcrumb", () => [
+            {url: "/", label: "Home"},
+            {url: "/blog", label: "Blog"},
+            {url: "/blog/authors", label: "Authors"}
+        ]);
+
         // misc related to blog author page
         Models.register("xinmods:blogauthor", "pageTitle", this.blogAuthorTitle);
         Models.register("xinmods:blogauthor", "metatags", this.blogAuthorMetaTags);
         Models.register("xinmods:blogauthor", "link", this.blogAuthorLink);
         Models.register("xinmods:blogauthor", "bodyClass", () => "Page--blogAuthor");
         Models.register("xinmods:blogauthor", "card", this.blogAuthorCard);
+        Models.register("xinmods:blogauthor", "breadcrumb", (doc) => [
+            {url: "/", label: "Home"},
+            {url: "/blog", label: "Blog"},
+            {url: "/blog/authors", label: "Authors"},
+            {url: "#", label: doc.items.name}
+        ]);
     },
 
 

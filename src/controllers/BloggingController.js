@@ -88,6 +88,7 @@ module.exports = {
     async authorLanding(hippo, req, resp) {
         const authors = await Blogging.getAllAuthors(hippo);
         return {
+            baseModel: { "type": "authorLanding" },
             authors: authors.authors,
             totalAuthors: authors.totalSize
         };

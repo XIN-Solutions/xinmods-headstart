@@ -2,7 +2,7 @@
     {{#if relatedPosts}}
         <h2 class="RelatedPosts__Title">Related Posts</h2>
         {{#each relatedPosts as |relPost|}}
-            {{> card/render style="RelatedPosts__Card" item=(use relPost as='card' document=../post)}}
+            {{> card/render style="RelatedPosts__Card" variation='horizontal' item=(use relPost as='card' document=../post)}}
         {{/each}}
     {{/if}}
 </div>
