@@ -114,6 +114,15 @@ module.exports = {
 		// allow for json bodies
 		app.use(express.json());
 
+		app.use('/assets', express.static(process.cwd() + "/assets"));
+		app.use(
+			'/assets/core',
+			express.static(__dirname + "/assets", {
+				maxAge: "3600000",
+			})
+		);
+
+
 		// determine the on reload handler list.
 		const onReload = (
 			options.onReload && options.onReload.length > 0
@@ -124,9 +133,7 @@ module.exports = {
 		// initialise handlebars and attach hotreload.
 		Handlebars
 			.initialise(app, hbs, process.cwd())
-			.then(() => {
-				HotReload.start({ onReload });
-			});
+			.then(() => { HotReload.start({ onReload }); });
 
 		// initialise out-of-the-box model transformations
 		require('./src/models/use/NavigationModels.js').initialise();

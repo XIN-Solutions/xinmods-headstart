@@ -1,0 +1,14 @@
+.c-cookiebar {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+}
+
+.c-cookiebar__button {
+    margin-left: 20px;
+}
+
+.c-cookiebar .card.cookie {
+    box-shadow: 0 0 15px #aaa;
+}
