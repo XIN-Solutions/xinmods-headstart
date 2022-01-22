@@ -66,7 +66,8 @@ module.exports = {
 	ModelServices: {
 		Navigation: require('./src/models/services/Navigation.js'),
 		Blogging: require('./src/models/services/Blogging.js'),
-		Products: require('./src/models/services/Products.js')
+		Products: require('./src/models/services/Products.js'),
+		Footer: require('./src/models/services/Footer.js')
 	},
 
 	/**
@@ -137,6 +138,7 @@ module.exports = {
 
 		// initialise out-of-the-box model transformations
 		require('./src/models/use/NavigationModels.js').initialise();
+		require('./src/models/use/FooterModels.js').initialise();
 		require('./src/models/use/ProductModels.js').initialise();
 		require('./src/models/use/BlogModels.js').initialise();
 		require('./src/models/use/BlogAuthorModels.js').initialise();

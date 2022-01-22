@@ -1,0 +1,25 @@
+<p>
+    <strong class="color-black">Follow</strong>
+</p>
+<ul class="header-social-network d-inline-block list-inline color-white mb-20">
+    {{#if item.socials.facebook}}
+        <li class="list-inline-item">
+            <a class="fb" href="{{item.socials.facebook}}" target="_blank" title="Facebook"><i class="elegant-icon social_facebook"></i></a>
+        </li>
+    {{/if}}
+    {{#if item.socials.twitter}}
+        <li class="list-inline-item">
+            <a class="tw" href="{{item.socials.twitter}}" target="_blank" title="Twitter"><i class="elegant-icon social_twitter"></i></a>
+        </li>
+    {{/if}}
+    {{#if item.socials.instagram}}
+        <li class="list-inline-item">
+            <a class="pt" href="{{item.socials.instagram}}" target="_blank" title="Instagram"><i class="elegant-icon social_instagram"></i></a>
+        </li>
+    {{/if}}
+    {{#if item.socials.email}}
+        <li class="list-inline-item">
+            <a class="pt" href="mailto:{{item.socials.email}}" target="_blank" title="Email"><i class="elegant-icon icon_mail_alt"></i></a>
+        </li>
+    {{/if}}
+</ul>

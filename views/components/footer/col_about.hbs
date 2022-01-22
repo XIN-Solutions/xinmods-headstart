@@ -1,0 +1,12 @@
+<div class="c-footer-about mb-30">
+    <div class="c-footer-about__title position-relative mb-30">
+        <h5 class="mt-5 mb-30">{{fallback item.info.title "About"}}</h5>
+    </div>
+    <div class="c-footer-about__body">
+        {{{item.info.text}}}
+
+        {{#if item.socials}}
+            {{> footer/socials }}
+        {{/if}}
+    </div>
+</div>

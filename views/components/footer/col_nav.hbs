@@ -1,0 +1,22 @@
+{{#each item.navCols as |col|}}
+    <div class="c-footer-nav__col col-lg-2 col-md-6">
+        <div class="mb-30">
+            <div class="position-relative mb-30">
+                {{#if col.link}}
+                    <h5 class="c-footer-nav__title mt-5 mb-30"><a href="{{col.link}}">{{col.label}}</a></h5>
+                {{else}}
+                    <h5 class="mt-5 mb-30">{{col.label}}</h5>
+                {{/if}}
+            </div>
+            <ul class="c-footer-nav__items font-small">
+                {{#each col.children as |navItem|}}
+                    {{#if navItem.url}}
+                        <li class="c-footer-nav__item">
+                            <a class="c-footer-nav__link" href="{{navItem.url}}">{{navItem.label}}</a>
+                        </li>
+                    {{/if}}
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+{{/each}}

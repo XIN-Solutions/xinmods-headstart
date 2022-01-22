@@ -30,6 +30,13 @@ function convertChild(child) {
 
 module.exports = {
 
+    convertNavItem(navItem, base) {
+        return  {
+            label: navItem.items.label,
+            link: navItem.items.link?.link?.ref ? Models.transform(navItem.items.link.link.ref, 'link') : null,
+            children: _.values(navItem.items.children).map(child => convertChild(child))
+        };
+    },
 
     /**
      * @returns {Navbar} navigation bar
@@ -63,6 +70,7 @@ module.exports = {
      * Register all the model transformations for product related elements.
      */
     register() {
+        Models.register("xinmods:navigationitem", "navigation", this.convertNavItem);
         Models.register("xinmods:navigation", "navbar", this.convertNavbar);
         Models.register("xinmods:redirect", "link", this.redirectLink);
     },

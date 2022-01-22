@@ -1,3 +1,5 @@
+@import 'vendors/elegant-icons/style.css';
+
 .c-cookiebar {
     position: fixed;
     bottom: 20px;
@@ -9,6 +11,7 @@
     margin-left: 20px;
 }
 
-.c-cookiebar .card.cookie {
-    box-shadow: 0 0 15px #aaa;
+.c-footer {
+    margin-top: 30px;
+    border-top: 1px solid #efefef;
 }
