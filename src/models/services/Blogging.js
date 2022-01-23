@@ -26,7 +26,24 @@ const AuthorFetch = [
     "image/link"
 ];
 
+const BlogSettingsFetch = [
+    "featured/*/link",
+    "items/heroImage/link"
+]
+
 module.exports = {
+
+    /**
+     * Grab blog settings.
+     *
+     * @param hippo {HippoConnection} connection
+     * @param path {string} path to where to find the blog settings.
+     * @returns {Promise<void>}
+     */
+    async getBlogSettings(hippo, path) {
+        const settings = await hippo.getDocumentByPath(path, { fetch: BlogSettingsFetch });
+         return settings;
+    },
 
     /**
      *
@@ -55,12 +72,12 @@ module.exports = {
     /**
      * Get category folder information
      *
-     * @param hippo
-     * @param path
+     * @param hippo {HippoConnection}
+     * @param path {string}
      * @returns {Promise<null>}
      */
     async getPostCategoryAtPath(hippo, path) {
-        const catName = path.substring(0, path.indexOf("/"));
+        const catName = path.includes("/") ? path.substring(0, path.indexOf("/")) : path;
         const catDoc = await hippo.listDocuments(`/content/documents/blog/articles`);
         return catDoc.folders.find(folder => folder.name === catName) ?? null;
     },
@@ -145,12 +162,12 @@ module.exports = {
      * @param limit {?number} a potential limit
      * @returns {Promise<{}>}
      */
-    async getAllPosts(hippo, limit = null) {
+    async getAllPosts(hippo, path, limit = null) {
 
         const query = (
             hippo.newQuery()
                 .type("xinmods:blog")
-                .includePath("/content/documents")
+                .includePath(path ?? "/content/documents")
                 .orderBy("hippostdpubwf:publicationDate", "desc")
         );
 

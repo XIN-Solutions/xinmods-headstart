@@ -1,8 +1,23 @@
 {{#contentFor "body"}}
 
-    <div class="container">
+    <div class="c-blogcategory container">
         <div class="row">
-            Blog Category
+
+            <div class="col-12">
+                <h2 class="blog-category__title">{{category.label}}</h2>
+            </div>
+
+            {{#each posts.articles as |post|}}
+                <div class="{{?: (equals @index 0) "col-8" "col-4"}} mb-4">
+
+                    {{> card/render
+                            style='post'
+                            variation=(?: (equals @index 0) 'overlay' 'vertical')
+                            item=(use post as='card')
+                    }}
+
+                </div>
+            {{/each}}
         </div>
     </div>
 

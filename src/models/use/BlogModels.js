@@ -32,7 +32,8 @@ module.exports = {
             image: (
                 baseDoc.hippo
                     ?.getImageFromLinkSync(doc.items.heroImage)
-                    ?.crop(500, 350)
+                    ?.scaleWidth(800)
+                    ?.crop(800, 600)
                     ?.toUrl()
             ),
             description: doc.items.summary
@@ -91,9 +92,49 @@ module.exports = {
     },
 
     /**
+     * Page-level transformations required for the blog landing page to function
+     */
+    registerBlogLandingTransformations() {
+        // blog landing page base model transformations
+        Models.register("xinmods:blogsettings", "pageTitle", () => "Blog");
+        Models.register("xinmods:blogsettings", "breadcrumb", () => {
+            return [
+                {url: "/", label: "Home"},
+                {url: "#", label: "Blog"}
+            ];
+        });
+        Models.register("xinmods:blogsettings", "bodyClass", () => "Page--blogLanding");
+        Models.register("xinmods:blogsettings", "metatags", () => []);
+
+    },
+
+    /**
+     * Page-level transformations required for the blog category pages to function
+     */
+    registerBlogCategoryTransformations() {
+        // blog landing page base model transformations
+        Models.register("virtual:blogcategory", "pageTitle", (cat) => "Blog : " + cat.label);
+        Models.register("virtual:blogcategory", "breadcrumb", (cat) => {
+            return [
+                {url: "/", label: "Home"},
+                {url: "/blog", label: "Blog"},
+                {url: "/blog/" + cat.name, label: cat.label},
+            ];
+        });
+
+        Models.register("virtual:blogcategory", "bodyClass", () => "Page--blogCategory");
+        Models.register("virtual:blogcategory", "metatags", () => []);
+
+    },
+
+    /**
      * Register all the model transformations for product related elements.
      */
     register() {
+        this.registerBlogLandingTransformations();
+        this.registerBlogCategoryTransformations();
+
+        // convert a blog post into a card or link
         Models.register("xinmods:blog", "card", this.blogCard);
         Models.register("xinmods:blog", "link", this.blogLink);
 
@@ -101,7 +142,7 @@ module.exports = {
         Models.register("xinmods:blog", "pageTitle", this.blogTitle);
         Models.register("xinmods:blog", "metatags", this.blogMetaTags);
         Models.register("xinmods:blog", "breadcrumb", this.blogPostBreadcrumb);
-        Models.register("xinmods:blog", "bodyClass", () => "Page--blog");
+        Models.register("xinmods:blog", "bodyClass", () => "Page--blogPost");
 
         Models.register("xinmods:blogimage", "slides", this.blogImageSlides);
     },

@@ -21,38 +21,6 @@ const axios = require('axios');
 
 module.exports = {
 
-    initialiseEndpoints(app) {
-
-        app.get("/blog", Hooks.viewEndpoint("blogging/blog_landing", [
-            'view.common', 'view.blogging', 'view.blogging.landing'
-        ]));
-
-        app.get("/blog/embed", this.embedRetrieval);
-
-        app.get("/blog/authors", Hooks.viewEndpoint("blogging/author_landing", [
-            'view.common', 'view.blogging',
-            'view.blogging.authors', 'view.blogging.authors.landing'
-        ]));
-
-        app.get("/blog/authors/:authorName", Hooks.viewEndpoint("blogging/author_detail", [
-            'view.common', 'view.blogging',
-            'view.blogging.authors', 'view.blogging.authors.detail'
-        ]));
-
-        app.get("/blog/tag/:storyTag", Hooks.viewEndpoint("blogging/blog_taglanding", [
-            'view.common', 'view.blogging', 'view.blogging.taglanding'
-        ]));
-
-        app.get("/blog/:category", Hooks.viewEndpoint("blogging/blog_category", [
-            'view.common', 'view.blogging', 'view.blogging.category'
-        ]));
-
-        app.get("/blog/:articlePath(*)", Hooks.viewEndpoint("blogging/blog_detail", [
-            'view.common', 'view.blogging', 'view.blogging.article'
-        ]));
-
-
-    },
 
     async embedRetrieval(req, resp) {
         const model = {
@@ -87,6 +55,7 @@ module.exports = {
      */
     async authorLanding(hippo, req, resp) {
         const authors = await Blogging.getAllAuthors(hippo);
+
         return {
             baseModel: { "type": "authorLanding" },
             authors: authors.authors,
@@ -139,13 +108,8 @@ module.exports = {
 
         const author = await Blogging.getAuthorAtPath(hippo, post.items.author.link.ref.name);
 
-        // fetch related post images so we can turn them into cards.
+        // // fetch related post images so we can turn them into cards.
         const relatedPosts = _.values(post.items.related).map(a => a.link.ref).filter(p => !!p);
-        for (const relPost of relatedPosts) {
-            const relPostHero = relPost.items.heroImage;
-            const imgRef = await hippo.getImageFromLink(relPostHero);
-            relPostHero.link.ref = imgRef.imageInfo;
-        }
 
         return {
             baseModel: post,
@@ -157,8 +121,118 @@ module.exports = {
         };
     },
 
+    /**
+     * Default handler for blog landing page
+     *
+     * @param hippo {HippoConnection}
+     * @param req
+     * @param resp
+     * @returns {Promise<{}>}
+     */
+    async blogLanding(hippo, req, resp) {
+
+        // get settings
+        const blogSettings = await Blogging.getBlogSettings(hippo, '/content/documents/blog/settings');
+
+        // extra hot tags
+        const hotTags = _.values(blogSettings?.items?.hotTags) ?? [];
+
+        // extract feature posts
+        const featurePosts = (
+            _.values(blogSettings.items.featured)
+                .map(post => post?.link?.ref ?? null)
+                .filter(o => o !== null)
+        );
+
+        // read latest posts for selected categories
+        const categoryPaths = (
+            _.values(blogSettings?.items?.homeCategories || {})
+                .map(catLink => catLink.link.path)
+        );
+
+        // retrieve selected categories
+        const categories = [];
+        for (const path of categoryPaths) {
+            const categoryName = _.last(path.split("/"));
+            const category = await Blogging.getPostCategoryAtPath(hippo, categoryName);
+            const posts = await Blogging.getAllPosts(hippo, path, 6);
+            categories.push({
+                category,
+                posts
+            });
+        }
+
+        return {
+            baseModel: blogSettings,
+            blogSettings,
+            hotTags,
+            featurePosts,
+            categories
+        };
+    },
 
 
+    /**
+     * Default handler for retrieving a blog category.
+     *
+     * @param hippo {HippoConnection} the hippo connection
+     * @param req
+     * @param resp
+     *
+     * @returns {?{}}
+     */
+    async blogCategory(hippo, req, resp) {
+
+        const categoryName = req.params.category;
+        const category = await Blogging.getPostCategoryAtPath(hippo, categoryName);
+
+        if (!category) {
+            resp.status(404);
+            return;
+        }
+
+        const posts = await Blogging.getAllPosts(hippo, category.path, 3 * 10 - 1);
+
+        return {
+            baseModel: {type: "virtual:blogcategory", ...category},
+            category,
+            posts
+        };
+    },
+
+
+    initialiseEndpoints(app) {
+
+        app.get("/blog", Hooks.viewEndpoint("blogging/blog_landing", [
+            'view.common', 'view.blogging', 'view.blogging.landing'
+        ]));
+
+        app.get("/blog/embed", this.embedRetrieval);
+
+        app.get("/blog/authors", Hooks.viewEndpoint("blogging/author_landing", [
+            'view.common', 'view.blogging',
+            'view.blogging.authors', 'view.blogging.authors.landing'
+        ]));
+
+        app.get("/blog/authors/:authorName", Hooks.viewEndpoint("blogging/author_detail", [
+            'view.common', 'view.blogging',
+            'view.blogging.authors', 'view.blogging.authors.detail'
+        ]));
+
+        app.get("/blog/tag/:storyTag", Hooks.viewEndpoint("blogging/blog_taglanding", [
+            'view.common', 'view.blogging', 'view.blogging.taglanding'
+        ]));
+
+        app.get("/blog/:category", Hooks.viewEndpoint("blogging/blog_category", [
+            'view.common', 'view.blogging', 'view.blogging.category'
+        ]));
+
+        app.get("/blog/:articlePath(*)", Hooks.viewEndpoint("blogging/blog_detail", [
+            'view.common', 'view.blogging', 'view.blogging.article'
+        ]));
+
+
+    },
     /**
      * initialise the blog-related endpoints
      *
@@ -168,6 +242,15 @@ module.exports = {
     initialise(app, hippo) {
 
         this.initialiseEndpoints(app);
+
+        Hooks.register('view.blogging.landing', async (req, resp) => {
+            return this.blogLanding(hippo, req, resp);
+        });
+
+        Hooks.register('view.blogging.category', async (req, resp) => {
+            return this.blogCategory(hippo, req, resp);
+        });
+
 
         Hooks.register('view.blogging.authors.landing', async (req, resp) => {
             return this.authorLanding(hippo, req, resp);
