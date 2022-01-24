@@ -1,24 +1,28 @@
 {{#contentFor "body"}}
 
-    {{> blog_detail/postTop . }}
+    <section class="c-postSection">
 
-    <div class="container">
-        <div class="row">
-            <div class="col-9">
-                {{> blog_detail/postHeader .}}
+        {{> blog_detail/postTop . }}
 
-                <div class="c-article">
-                    {{> blog_detail/postBody . }}
+        <div class="container">
+            <div class="row">
+                <div class="col-9">
+                    {{> blog_detail/postHeader .}}
+
+                    <div class="c-article">
+                        {{> blog_detail/postBody . }}
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    {{> blog_detail/postSidebar .}}
                 </div>
             </div>
-
-            <div class="col-3">
-                {{> blog_detail/postSidebar .}}
-            </div>
         </div>
-    </div>
 
-    {{> blog_detail/postBottom . }}
+        {{> blog_detail/postBottom . }}
+
+    </section>
 
 {{/contentFor}}
 

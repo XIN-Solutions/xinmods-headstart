@@ -1,6 +1,10 @@
 <!-- postHeader -->
 <div class="c-postHeader">
-    <span class="c-postHeader__Storytag" style="text-transform: uppercase">{{post.items.storyTag}}</span>
+    {{#if post.items.storyTag}}
+        <a href="/blog/tag/{{post.items.storyTag}}" class="c-postHeader__Storytag" style="text-transform: uppercase">
+            {{post.items.storyTag}}
+        </a>
+    {{/if}}
     <h1 class="c-postHeader__Title">{{post.items.title}}</h1>
     <img class="c-postHeader__Image" width="100%" src="{{image-url heroImage width=800 cropX=800 cropY=300}}">
 </div>

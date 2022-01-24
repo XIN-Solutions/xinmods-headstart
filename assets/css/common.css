@@ -14,4 +14,63 @@
 .c-footer {
     margin-top: 30px;
     border-top: 1px solid #efefef;
+    background: white;
+    box-shadow: 0 -4px 10px #eee;
 }
+    .c-footer-copyright {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .c-footer .footer-social a {
+        color: #666;
+        text-decoration: none;
+    }
+
+    .c-footer .footer-social a:hover {
+        color: #333;
+    }
+
+.c-postSection {
+    margin-top: 30px;
+}
+
+.breadcrumb {
+    margin-top: 40px;
+}
+
+.blogsection {
+    padding: 30px;
+}
+
+.blogsection.blogsection--odd {
+    background: #f3f3f3;
+}
+
+.c-bloglanding.container {
+    position: relative;
+}
+
+.hot-tags {
+    display: flex;
+
+    position: absolute;
+    right: 8px;
+    top: 7px;
+}
+    .hot-tags .hot-tags__title {
+        display: block;
+        padding-right: 10px;
+    }
+
+    .hot-tags .hot-tags__list {
+        flex-grow: 1;
+        padding: 0
+    }
+
+    .hot-tags .hot-tags__listItem {
+        display: inline;
+        padding-right: 5px;
+    }
+
+

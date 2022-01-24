@@ -112,6 +112,7 @@ module.exports = {
      * Page-level transformations required for the blog category pages to function
      */
     registerBlogCategoryTransformations() {
+
         // blog landing page base model transformations
         Models.register("virtual:blogcategory", "pageTitle", (cat) => "Blog : " + cat.label);
         Models.register("virtual:blogcategory", "breadcrumb", (cat) => {
@@ -128,11 +129,33 @@ module.exports = {
     },
 
     /**
+     * Page-level transformations required for the blog category pages to function
+     */
+    registerBlogTagLandingTransformations() {
+
+        // blog landing page base model transformations
+        Models.register("virtual:blogtaglanding", "pageTitle", (tag) => "Blog : Tag : " + tag.storyTag);
+        Models.register("virtual:blogtaglanding", "breadcrumb", (tag) => {
+            return [
+                {url: "/", label: "Home"},
+                {url: "/blog", label: "Blog"},
+                {url: "/blog", label: "Tags"},
+                {url: "/blog/tag/" + tag.storyTag, label: tag.storyTag},
+            ];
+        });
+
+        Models.register("virtual:blogtaglanding", "bodyClass", () => "Page--blogTagLanding");
+        Models.register("virtual:blogtaglanding", "metatags", () => []);
+
+    },
+
+    /**
      * Register all the model transformations for product related elements.
      */
     register() {
         this.registerBlogLandingTransformations();
         this.registerBlogCategoryTransformations();
+        this.registerBlogTagLandingTransformations();
 
         // convert a blog post into a card or link
         Models.register("xinmods:blog", "card", this.blogCard);

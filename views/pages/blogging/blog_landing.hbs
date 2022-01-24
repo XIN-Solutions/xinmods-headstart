@@ -1,60 +1,69 @@
 {{#contentFor "body"}}
 
-    <div class="c-bloglanding container">
-        <div class="row">
-            {{#if hotTags}}
-                <div class="col-12">
-                    <div class="hot-tags">
-                        <h2 class="hot-tags__title">Hot Tags</h2>
-                        <ul class="hot-tags__list">
-                            {{#each hotTags as |tag|}}
-                                <li>
-                                    <a href="/blog/tags/{{tag}}">{{tag}}</a>
-                                </li>
-                            {{/each}}
-                        </ul>
+    <section class="blogsection blogsection--even">
+        <div class="c-bloglanding container">
+            <div class="row">
+                {{#if hotTags}}
+                    <div class="col-12">
+                        <div class="hot-tags">
+                            <span class="hot-tags__title">Hot Tags</span>
+                            <ul class="hot-tags__list">
+                                {{#each hotTags as |tag|}}
+                                    <li class="hot-tags__listItem">
+                                        <a href="/blog/tag/{{tag}}">{{tag}}</a>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            {{/if}}
+                {{/if}}
 
-            {{#if (has-items featurePosts)}}
+                {{#if (has-items featurePosts)}}
 
-                <div class="col-12">
-                    <h2 class="featured-post__title">Featured Posts</h2>
-                </div>
-
-                {{#each featurePosts as |post|}}
-                    <div class="{{?: (equals @index 0) "col-8" "col-4"}} mb-4">
-
-                        {{> card/render
-                                style='post'
-                                variation=(?: (equals @index 0) 'overlay' 'vertical')
-                                item=(use post as='card' document=../blogSettings)
-                        }}
-
+                    <div class="col-12">
+                        <h2 class="featured-post__title">Featured Posts</h2>
                     </div>
-                {{/each}}
-            {{/if}}
 
-            {{#each categories as |catInfo|}}
-                <div class="col-12">
-                    <h2 class="blog-category__title">{{catInfo.category.label}}</h2>
-                </div>
+                    {{#each featurePosts as |post|}}
+                        <div class="{{?: (equals @index 0) "col-8" "col-4"}} mb-4">
 
-                {{#each catInfo.posts.articles as |post|}}
-                    <div class="{{?: (equals @index 0) "col-8" "col-4"}} mb-4">
+                            {{> card/render
+                                    style='post'
+                                    variation=(?: (equals @index 0) 'overlay' 'vertical')
+                                    item=(use post as='card' document=../blogSettings)
+                            }}
 
-                        {{> card/render
-                                style='post'
-                                variation=(?: (equals @index 0) 'overlay' 'vertical')
-                                item=(use post as='card')
-                        }}
-
-                    </div>
-                {{/each}}
-            {{/each}}
+                        </div>
+                    {{/each}}
+                {{/if}}
+            </div>
         </div>
-    </div>
+    </section>
+
+    {{#each categories as |catInfo|}}
+
+        <section class="blogsection {{?: (odd @index) "blogsection--even" "blogsection--odd"}}">
+            <div class="c-bloglanding container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="blog-category__title">{{catInfo.category.label}}</h2>
+                    </div>
+
+                    {{#each catInfo.posts.articles as |post|}}
+                        <div class="{{?: (equals @index 0) "col-8" "col-4"}} mb-4">
+
+                            {{> card/render
+                                    style='post'
+                                    variation=(?: (equals @index 0) 'overlay' 'vertical')
+                                    item=(use post as='card')
+                            }}
+
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </section>
+    {{/each}}
 
 {{/contentFor}}
 

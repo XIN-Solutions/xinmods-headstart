@@ -106,7 +106,8 @@ module.exports = {
             return;
         }
 
-        const author = await Blogging.getAuthorAtPath(hippo, post.items.author.link.ref.name);
+        const authorName = post.items.author.link?.ref?.name ?? null;
+        const author = authorName ? await Blogging.getAuthorAtPath(hippo, authorName) : null;
 
         // // fetch related post images so we can turn them into cards.
         const relatedPosts = _.values(post.items.related).map(a => a.link.ref).filter(p => !!p);
@@ -201,6 +202,27 @@ module.exports = {
     },
 
 
+    /**
+     * Populate blog tag landing page view.
+     *
+     * @param hippo {HippoConnection} the hippo connection to use
+     * @param req
+     * @param resp
+     *
+     * @returns {Promise<{*}>}
+     */
+    async blogTagLanding(hippo, req, resp) {
+        const storyTag = req.params.storyTag;
+        const posts = await Blogging.getPostsWithStoryTag(hippo, storyTag);
+
+        return {
+            baseModel: {type: "virtual:blogtaglanding", storyTag},
+            storyTag,
+            posts
+        };
+    },
+
+
     initialiseEndpoints(app) {
 
         app.get("/blog", Hooks.viewEndpoint("blogging/blog_landing", [
@@ -251,6 +273,10 @@ module.exports = {
             return this.blogCategory(hippo, req, resp);
         });
 
+
+        Hooks.register('view.blogging.taglanding', async (req, resp) => {
+            return this.blogTagLanding(hippo, req, resp);
+        });
 
         Hooks.register('view.blogging.authors.landing', async (req, resp) => {
             return this.authorLanding(hippo, req, resp);

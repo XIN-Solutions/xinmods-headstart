@@ -51,6 +51,15 @@ module.exports = {
 			return !_.isEmpty(a);
 		});
 
+		hbs.registerHelper("odd", function(a, options) {
+			return a % 2 === 1;
+		});
+
+		hbs.registerHelper("even", function(a, options) {
+			return a % 2 === 0;
+		});
+
+
 		hbs.registerHelper("not", function(a, options) {
 			return !!!a;
 		});

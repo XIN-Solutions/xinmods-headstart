@@ -83,15 +83,26 @@ module.exports = {
     },
 
     /**
+     * Get all posts with a particular story tag
+     *
      * @param hippo {HippoConnection}
-     * @param storyTags {string|string[]}
+     * @param storyTag {string}
      * @returns {Promise<void>}
      */
-    async getPostsWithStoryTag(hippo, storyTags) {
-        const allTags = _.isArray(storyTags) ? storyTags : [storyTags];
-        const tags = allTags.map(el => `xinmods:storyTag/${el}`).join("/");
-        const docsWithTag = await hippo.getFacetAtPath("/content/facets/blogs-story-tags", tags, {fetch: PostFetch});
-        return docsWithTag.results;
+    async getPostsWithStoryTag(hippo, storyTag, limit = 17) {
+
+        const query = (
+            hippo.newQuery()
+                .type("xinmods:blog")
+                .includePath("/content/documents/blog/articles")
+                .orderBy("hippostdpubwf:publicationDate", "desc")
+                .where().equals("xinmods:storyTag", storyTag).end()
+                .limit(limit)
+                .build()
+        );
+
+        const results = await hippo.executeQuery(query, {fetch: PostFetch});
+        return {totalSize: results.totalSize, articles: results.documents};
     },
 
 
